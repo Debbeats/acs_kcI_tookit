@@ -1227,7 +1227,7 @@ function updateStatus(idx, val) {
     const c = val==='Closed'?'var(--green)':val==='Pending'?'var(--amber)':val.includes('NCM')?'var(--red)':val==='Escalated'?'var(--purple)':'var(--cyan)';
     sel.style.borderColor = c; sel.style.color = c;
   }
-  if (val === 'NCM1' || val === 'NCM2') {
+  if (val === 'NCM1') {
     const t = emailTemplates.find(t => t.id === 'first_followup');
     if (t) {
       textarea.value = t.content;
@@ -1235,9 +1235,20 @@ function updateStatus(idx, val) {
       const tb = document.getElementById('tpl-first_followup');
       if (tb) tb.classList.add('active');
       navigator.clipboard.writeText(t.content).catch(()=>{});
-      toast('📋 NCM set — Follow Up email auto-loaded & copied!', 'var(--red)');
+      toast('📋 NCM set — 1st Follow Up email auto-loaded & copied!', 'var(--red)');
     }
   }
+  if (val === 'NCM2') {
+    const t = emailTemplates.find(t => t.id === 'second_followup');
+    if (t) {
+      textarea.value = t.content;
+      document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
+      const tb = document.getElementById('tpl-second_followup');
+      if (tb) tb.classList.add('active');
+      navigator.clipboard.writeText(t.content).catch(()=>{});
+      toast('📋 NCM set — 2nd Follow Up email auto-loaded & copied!', 'var(--red)');
+    }
+}
 }
 function applyFiltersAndMetrics() {
   const owner = document.getElementById('ownerFilterDropdown').value.toLowerCase().trim();
