@@ -1228,7 +1228,7 @@ function updateStatus(idx, val) {
     sel.style.borderColor = c; sel.style.color = c;
   }
   if (val === 'NCM1' || val === 'NCM2') {
-    const t = emailTemplates.find(t => t.id === 'final_ncm');
+    const t = emailTemplates.find(t => t.id === 'first_followup');
     if (t) {
       textarea.value = t.content;
       document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
