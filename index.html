@@ -1232,10 +1232,10 @@ function updateStatus(idx, val) {
     if (t) {
       textarea.value = t.content;
       document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
-      const tb = document.getElementById('tpl-final_ncm');
+      const tb = document.getElementById('tpl-first_followup');
       if (tb) tb.classList.add('active');
       navigator.clipboard.writeText(t.content).catch(()=>{});
-      toast('📋 NCM set — Final Follow Up email auto-loaded & copied!', 'var(--red)');
+      toast('📋 NCM set — Follow Up email auto-loaded & copied!', 'var(--red)');
     }
   }
 }
