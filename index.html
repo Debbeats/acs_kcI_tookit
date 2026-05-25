@@ -241,7 +241,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .nav-item.active::before {
   content: '';
   position: absolute;
-  left: 0; top: 20%; bottom: 20%;
+  left: 0; top: 20%;
+  bottom: 20%;
   width: 3px;
   background: var(--cyan);
   border-radius: 99px;
@@ -249,7 +250,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 }
 .nav-icon {
   width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center; justify-content: center;
   background: var(--surface2);
   border-radius: 8px;
   font-size: 0.95rem;
@@ -504,7 +506,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 0.78rem; color: var(--text3);
+  font-size: 0.78rem;
+  color: var(--text3);
 }
 .email-textarea {
   width: 100%;
@@ -649,7 +652,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 /* ═══════════════════════════ TOAST ═══════════════════════════ */
 #toast {
   position: fixed;
-  bottom: 28px; right: 28px;
+  bottom: 28px;
+  right: 28px;
   background: var(--surface2);
   border: 1px solid var(--border-bright);
   border-left: 3px solid var(--cyan);
@@ -684,7 +688,6 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 </head>
 <body>
 
-<!-- ═══════════ LOGIN ═══════════ -->
 <div id="loginScreen">
   <div class="login-bg-grid"></div>
   <div class="login-radial"></div>
@@ -720,9 +723,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   </div>
 </div>
 
-<!-- ═══════════ APP SHELL ═══════════ -->
 <div id="appShell">
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon">
@@ -764,7 +765,6 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
     </div>
   </aside>
 
-  <!-- MAIN AREA -->
   <div class="main-content">
     <header class="top-header">
       <div class="page-title-area">
@@ -780,7 +780,6 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 
     <div class="page-body">
 
-      <!-- ═══ TAB: KCI MAIL ═══ -->
       <div class="tab-view active" id="tab-kci">
         <div class="stats-row">
           <div class="stat-card cyan" style="--accent:var(--cyan)">
@@ -830,7 +829,6 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
       </div>
 
-      <!-- ═══ TAB: OPEN CASE REPORT ═══ -->
       <div class="tab-view hidden" id="tab-report">
         <div class="upload-zone" id="dropZone" onclick="document.getElementById('excelFileInput').click()">
           <div class="upload-zone-icon">📥</div>
@@ -865,7 +863,6 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
       </div>
 
-      <!-- ═══ TAB: GOLDEN ACCOUNT ═══ -->
       <div class="tab-view hidden" id="tab-golden">
         <div class="stats-row">
           <div class="stat-card cyan"><div class="stat-icon">👑</div><div class="stat-label">Total Golden Accounts</div><div class="stat-value" id="valTotalGoldenRows">0</div></div>
@@ -882,13 +879,12 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
       </div>
 
-      <!-- ═══ TAB: ADM ACCOUNT LIST ═══ -->
       <div class="tab-view hidden" id="tab-adm">
         <div class="upload-zone" id="admDropZone" onclick="document.getElementById('admFileInput').click()">
           <div class="upload-zone-icon">🏢</div>
           <h3>Drop your ADM Account List here</h3>
           <p>Accepts files containing <strong>ADM Account List</strong> in the filename (.xlsx / .xls / .csv)</p>
-          <span class="upload-badge">Reads last sheet: "Accounts T100 &amp; CEP"</span>
+          <span class="upload-badge">Reads sheet: "AccountList"</span>
           <input type="file" id="admFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessAdmFile(this.files[0])">
         </div>
 
@@ -914,11 +910,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
       </div>
 
-    </div><!-- /page-body -->
-  </div><!-- /main-content -->
-</div><!-- /appShell -->
-
-<div id="toast"></div>
+    </div></div></div><div id="toast"></div>
 
 <script>
 /* ════════════════════════════════════════════════
@@ -1011,6 +1003,7 @@ const tabMeta = {
   golden: { title: 'Golden Account List',  crumb: 'Account Ledger' },
   adm:    { title: 'ADM Account List',     crumb: 'ADM Directory' },
 };
+
 function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-view').forEach(v => { v.classList.remove('active'); v.classList.add('hidden'); });
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -1248,7 +1241,7 @@ function updateStatus(idx, val) {
       navigator.clipboard.writeText(t.content).catch(()=>{});
       toast('📋 NCM set — 2nd Follow Up email auto-loaded & copied!', 'var(--red)');
     }
-}
+  }
 }
 function applyFiltersAndMetrics() {
   const owner = document.getElementById('ownerFilterDropdown').value.toLowerCase().trim();
@@ -1423,17 +1416,21 @@ function deleteAdmFromIndexedDB() {
 function paintAdmTable(data, sheetName, savedAt) {
   admRawData = data;
   const table = document.getElementById('admDataTable');
-  const headers = ['ADM', 'Level2 Email Id', 'Subsidiary Legal Name'];
+  
+  // Set the new headers
+  const headers = ['Subsidiary Legal Name', 'ADM Name', 'ADM/VRM'];
   let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
+  
   data.forEach(row => {
     h += `<tr>
-      <td style="font-weight:600;color:var(--text)">${row.ADM}</td>
-      <td><a href="mailto:${row['Level2 Email Id']}" style="color:var(--cyan);text-decoration:none">${row['Level2 Email Id']}</a></td>
-      <td>${row['Subsidiary Legal Name']}</td>
+      <td style="font-weight:600;color:var(--text)">${row['Subsidiary Legal Name'] || '-'}</td>
+      <td>${row['ADM Name'] || '-'}</td>
+      <td>${row['ADM/VRM'] || '-'}</td>
     </tr>`;
   });
   h += '</tbody>';
   table.innerHTML = h;
+  
   document.getElementById('valTotalAdmRows').textContent = data.length;
   document.getElementById('valAdmSheetName').textContent = sheetName;
   document.getElementById('admStats').classList.remove('hidden');
@@ -1459,34 +1456,54 @@ function validateAndProcessAdmFile(file) {
   toast('✅ File accepted — click "Update ADM List" to save.', 'var(--green)');
 }
 
+/* ── Extract Data from "AccountList" Sheet ── */
 function renderAdmTable() {
   if (!admPendingFile) return;
   const reader = new FileReader();
   reader.onload = e => {
     try {
       const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      const sheetName = wb.SheetNames[wb.SheetNames.length - 1];
-      const ws = wb.Sheets[sheetName];
+      
+      // Target explicitly the "AccountList" sheet (case-insensitive check to be safe)
+      const targetSheetName = wb.SheetNames.find(name => name.replace(/\s+/g, '').toLowerCase() === 'accountlist');
+      
+      if (!targetSheetName) {
+        toast('⚠️ "AccountList" sheet not found in the workbook.', 'var(--amber)');
+        return;
+      }
+
+      const ws = wb.Sheets[targetSheetName];
       const allRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-      if (!allRows.length) { toast('⚠️ Target sheet is empty.', 'var(--amber)'); return; }
+      
+      if (!allRows.length) { 
+        toast(`⚠️ Target sheet "${targetSheetName}" is empty.`, 'var(--amber)'); 
+        return; 
+      }
 
       const parsed = allRows.map(row => {
         const keys = Object.keys(row);
-        const admKey     = keys.find(k => k.trim().toLowerCase() === 'adm');
-        const emailKey   = keys.find(k => k.trim().toLowerCase() === 'level2 email id');
-        const companyKey = keys.find(k => k.trim().toLowerCase() === 'subsidiary_legal_name');
+        
+        // Flexible key matching to handle spacing or underscore variations in column headers
+        const companyKey = keys.find(k => k.trim().toLowerCase() === 'subsidiary_legal_name' || k.trim().toLowerCase() === 'subsidiary legal name');
+        const admNameKey = keys.find(k => k.trim().toLowerCase() === 'adm name' || k.trim().toLowerCase() === 'adm_name');
+        const admVrmKey  = keys.find(k => k.trim().toLowerCase().includes('adm/vrm') || k.trim().toLowerCase().includes('adm/ vrm'));
+
         return {
-          "ADM": admKey ? row[admKey] : '',
-          "Level2 Email Id": emailKey ? row[emailKey] : '',
-          "Subsidiary Legal Name": companyKey ? row[companyKey] : ''
+          "Subsidiary Legal Name": companyKey ? row[companyKey] : '',
+          "ADM Name": admNameKey ? row[admNameKey] : '',
+          "ADM/VRM": admVrmKey ? row[admVrmKey] : ''
         };
-      }).filter(r => r.ADM !== '');
+      }).filter(r => r["Subsidiary Legal Name"] !== '' || r["ADM Name"] !== '' || r["ADM/VRM"] !== ''); // Filter out completely empty rows
+
+      if (!parsed.length) {
+        toast(`⚠️ No matching columns found on sheet "${targetSheetName}".`, 'var(--amber)');
+        return;
+      }
 
       const savedAt = Date.now();
-      saveAdmToIndexedDB(parsed, sheetName, savedAt);  // ← persist
-      paintAdmTable(parsed, sheetName, savedAt);
-
-      toast(`💾 ADM list saved — ${parsed.length} entries from "${sheetName}"`, 'var(--green)');
+      saveAdmToIndexedDB(parsed, targetSheetName, savedAt);  // ← persist
+      paintAdmTable(parsed, targetSheetName, savedAt);
+      toast(`💾 ADM list saved — ${parsed.length} entries from "${targetSheetName}"`, 'var(--green)');
     } catch (err) {
       console.error(err);
       toast('❌ File parse error. Ensure it is a valid spreadsheet.', 'var(--red)');
