@@ -1189,10 +1189,10 @@ function renderCaseTable() {
   h += '</tr></thead><tbody>';
   globalRawJsonData.forEach((row, i) => {
     const st = rowStatusStateArray[i] || 'Pending';
-    const stCol = st==='Closed'?'var(--green)':st==='Pending'?'var(--amber)':st.includes('NCM')?'var(--red)':st==='Escalated'?'var(--purple)':'var(--cyan)';
+    const stCol = st==='Closed'?'var(--green)':st==='Pending'?'var(--amber)':st.includes('NCM')?'var(--red)':st==='Escalated'?'var(--purple)':st==='Dispatched'?'var(--green)':'var(--cyan)';
     h += `<tr id="cr-${i}" data-idx="${i}"><td>
       <select class="status-select" onchange="updateStatus(${i},this.value)" style="border-color:${stCol};color:${stCol}">
-        ${['Pending','NCM1','NCM2','Closed','Escalated'].map(s=>`<option value="${s}"${st===s?' selected':''}>${s}</option>`).join('')}
+        ${['Pending','NCM1','NCM2','Closed','Escalated','Dispatched'].map(s=>`<option value="${s}"${st===s?' selected':''}>${s}</option>`).join('')}
       </select></td>`;
     globalDataHeaders.forEach(c => h += `<td>${row[c]}</td>`);
     h += '</tr>';
@@ -1217,7 +1217,7 @@ function updateStatus(idx, val) {
   // Update dropdown color
   const sel = document.querySelector(`#cr-${idx} .status-select`);
   if (sel) {
-    const c = val==='Closed'?'var(--green)':val==='Pending'?'var(--amber)':val.includes('NCM')?'var(--red)':val==='Escalated'?'var(--purple)':'var(--cyan)';
+    const c = val==='Closed'?'var(--green)':val==='Pending'?'var(--amber)':val==='Dispatched'?'var(--green)':val.includes('NCM')?'var(--red)':val==='Escalated'?'var(--purple)':'var(--cyan)';
     sel.style.borderColor = c; sel.style.color = c;
   }
   if (val === 'NCM1') {
