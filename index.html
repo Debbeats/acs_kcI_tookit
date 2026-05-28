@@ -36,20 +36,24 @@
   --mono: 'Space Mono', monospace;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box;
+  margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; overflow-x: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; overflow-x: hidden;
+}
 
 /* ═══════════════════════════ SCROLLBAR ═══════════════════════════ */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px;
+}
 ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
 
 /* ═══════════════════════════ LOGIN PAGE ═══════════════════════════ */
 #loginScreen {
   position: fixed; inset: 0; z-index: 1000;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center; justify-content: center;
   background: var(--bg);
   overflow: hidden;
 }
@@ -95,13 +99,16 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   box-shadow: 0 0 20px var(--cyan-glow);
 }
 .login-brand-name { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.3px; }
-.login-brand-sub { font-size: 0.78rem; color: var(--text2); font-weight: 400; margin-top: 2px; }
+.login-brand-sub { font-size: 0.78rem; color: var(--text2);
+  font-weight: 400; margin-top: 2px; }
 
 .login-heading { font-size: 1.65rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
-.login-sub { font-size: 0.88rem; color: var(--text2); margin-bottom: 36px; line-height: 1.5; }
+.login-sub { font-size: 0.88rem; color: var(--text2);
+  margin-bottom: 36px; line-height: 1.5; }
 
 .login-field { margin-bottom: 18px; }
-.login-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+.login-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text2);
+  text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
 .login-field input {
   width: 100%;
   background: var(--surface2);
@@ -118,7 +125,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   border-color: var(--cyan);
   box-shadow: 0 0 0 3px var(--cyan-dim);
 }
-.login-field input::placeholder { color: var(--text3); }
+.login-field input::placeholder { color: var(--text3);
+}
 
 .login-creds-note {
   background: var(--amber-dim);
@@ -159,14 +167,17 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   box-shadow: 0 6px 24px var(--cyan-glow);
   letter-spacing: 0.2px;
 }
-.login-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 10px 30px var(--cyan-glow); }
+.login-btn:hover { opacity: 0.9; transform: translateY(-1px);
+  box-shadow: 0 10px 30px var(--cyan-glow); }
 .login-btn:active { transform: translateY(0); }
 
-.login-footer { text-align: center; margin-top: 28px; font-size: 0.78rem; color: var(--text3); }
+.login-footer { text-align: center; margin-top: 28px; font-size: 0.78rem; color: var(--text3);
+}
 
 /* ═══════════════════════════ MAIN APP SHELL ═══════════════════════════ */
 #appShell { display: none; min-height: 100vh; }
-#appShell.visible { display: flex; }
+#appShell.visible { display: flex;
+}
 
 /* ═══════════════════════════ SIDEBAR ═══════════════════════════ */
 .sidebar {
@@ -202,7 +213,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   flex-shrink: 0;
   box-shadow: 0 0 16px var(--cyan-glow);
 }
-.sidebar-logo-text { font-size: 0.95rem; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2; }
+.sidebar-logo-text { font-size: 0.95rem; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2;
+}
 .sidebar-logo-sub { font-size: 0.68rem; color: var(--text2); font-weight: 400; letter-spacing: 0.2px; }
 
 .sidebar-section-label {
@@ -232,7 +244,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   text-align: left;
   position: relative;
 }
-.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item:hover { background: var(--surface2); color: var(--text);
+}
 .nav-item.active {
   background: var(--cyan-dim);
   color: var(--cyan);
@@ -258,7 +271,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   flex-shrink: 0;
   transition: background 0.2s;
 }
-.nav-item.active .nav-icon { background: var(--cyan-dim); }
+.nav-item.active .nav-icon { background: var(--cyan-dim);
+}
 .nav-item:hover .nav-icon { background: var(--surface3); }
 
 .sidebar-bottom {
@@ -283,7 +297,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   font-weight: 700; font-size: 0.85rem; color: #fff;
   flex-shrink: 0;
 }
-.user-name { font-size: 0.82rem; font-weight: 600; }
+.user-name { font-size: 0.82rem; font-weight: 600;
+}
 .user-role { font-size: 0.72rem; color: var(--text2); }
 .logout-btn-small {
   margin-left: auto;
@@ -296,7 +311,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   border-radius: 4px;
   transition: color 0.2s;
 }
-.logout-btn-small:hover { color: var(--red); }
+.logout-btn-small:hover { color: var(--red);
+}
 
 /* ═══════════════════════════ MAIN CONTENT ═══════════════════════════ */
 .main-content {
@@ -319,11 +335,13 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   position: sticky;
   top: 0; z-index: 50;
 }
-.page-title-area { display: flex; flex-direction: column; gap: 2px; }
+.page-title-area { display: flex; flex-direction: column; gap: 2px;
+}
 .page-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px; }
 .page-breadcrumb { font-size: 0.75rem; color: var(--text3); }
 
-.header-right { display: flex; align-items: center; gap: 14px; }
+.header-right { display: flex; align-items: center;
+  gap: 14px; }
 .clock-chip {
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -366,10 +384,12 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 @keyframes fadeUp { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:none} }
 
 .tab-view { display: none; }
-.tab-view.active { display: block; animation: fadeUp 0.3s ease both; }
+.tab-view.active { display: block;
+  animation: fadeUp 0.3s ease both; }
 
 /* ═══════════════════════════ STAT CARDS ═══════════════════════════ */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;
+  margin-bottom: 24px; }
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -379,7 +399,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   overflow: hidden;
   transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
-.stat-card:hover { border-color: var(--border-bright); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.stat-card:hover { border-color: var(--border-bright); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
 .stat-card::before {
   content: '';
   position: absolute;
@@ -391,17 +412,21 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 }
 .stat-card:hover::before { opacity: 1; }
 .stat-icon { font-size: 1.3rem; margin-bottom: 12px; }
-.stat-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text2); margin-bottom: 6px; }
-.stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -1px; font-family: var(--mono); }
+.stat-label { font-size: 0.75rem;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text2); margin-bottom: 6px; }
+.stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -1px; font-family: var(--mono);
+}
 .stat-sub { font-size: 0.75rem; color: var(--text3); margin-top: 4px; }
 .stat-card.cyan .stat-value { color: var(--cyan); }
-.stat-card.amber .stat-value { color: var(--amber); }
+.stat-card.amber .stat-value { color: var(--amber);
+}
 .stat-card.green .stat-value { color: var(--green); }
 .stat-card.purple .stat-value { color: var(--purple); }
 
 /* ═══════════════════════════ SECTION HEADER ═══════════════════════════ */
 .section-header {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex;
+  align-items: center; justify-content: space-between;
   margin-bottom: 16px;
   flex-wrap: wrap; gap: 12px;
 }
@@ -446,11 +471,13 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 }
 
 /* ═══════════════════════════ TWO-COL LAYOUT ═══════════════════════════ */
-.two-col { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; }
+.two-col { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px;
+}
 @media(max-width:1100px){ .two-col { grid-template-columns: 1fr; } }
 
 /* ═══════════════════════════ TEMPLATE GRID ═══════════════════════════ */
-.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px; }
 .tpl-btn {
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -486,13 +513,15 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   width: 30px; height: 30px;
   background: var(--surface3);
   border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center; justify-content: center;
   font-size: 0.9rem;
   flex-shrink: 0;
   transition: background 0.2s;
   position: relative;
 }
-.tpl-btn.active .tpl-icon { background: rgba(0,212,255,0.2); }
+.tpl-btn.active .tpl-icon { background: rgba(0,212,255,0.2);
+}
 
 /* ═══════════════════════════ EMAIL TEXTAREA ═══════════════════════════ */
 .email-wrap {
@@ -525,7 +554,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 
 /* ═══════════════════════════ BUTTONS ═══════════════════════════ */
 .btn {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center;
+  gap: 8px;
   padding: 10px 22px;
   border-radius: var(--radius-sm);
   font-family: var(--font);
@@ -536,18 +566,24 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   transition: all 0.2s;
 }
 .btn-primary { background: var(--cyan); color: #000; box-shadow: 0 4px 14px var(--cyan-glow); }
-.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-primary:hover { opacity: 0.85; transform: translateY(-1px);
+}
 .btn-success { background: var(--green); color: #fff; box-shadow: 0 4px 14px rgba(16,185,129,0.3); }
-.btn-success:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-success:hover { opacity: 0.85; transform: translateY(-1px);
+}
 .btn-ghost { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); }
 .btn-ghost:hover { background: var(--surface3); color: var(--text); }
-.btn-danger-ghost { background: transparent; border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+.btn-danger-ghost { background: transparent;
+  border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
 .btn-danger-ghost:hover { background: var(--red-dim); }
-.btn-sm { padding: 7px 14px; font-size: 0.8rem; }
+.btn-sm { padding: 7px 14px; font-size: 0.8rem;
+}
 .btn-amber { background: var(--amber); color: #000; box-shadow: 0 4px 14px rgba(245,158,11,0.3); }
-.btn-amber:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-amber:hover { opacity: 0.85; transform: translateY(-1px);
+}
 
-.action-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; justify-content: flex-end; }
+.action-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; justify-content: flex-end;
+}
 
 /* ═══════════════════════════ UPLOAD ZONE ═══════════════════════════ */
 .upload-zone {
@@ -566,7 +602,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 }
 .upload-zone-icon { font-size: 2.4rem; margin-bottom: 12px; }
 .upload-zone h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
-.upload-zone p { font-size: 0.82rem; color: var(--text2); line-height: 1.5; }
+.upload-zone p { font-size: 0.82rem;
+  color: var(--text2); line-height: 1.5; }
 .upload-zone input[type=file] { display: none; }
 .upload-badge {
   display: inline-block;
@@ -596,7 +633,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   min-width: 180px;
 }
 .filter-input:focus, .filter-select:focus { border-color: var(--cyan); }
-.filter-input::placeholder { color: var(--text3); }
+.filter-input::placeholder { color: var(--text3);
+}
 .filter-input { flex: 1; min-width: 220px; }
 .filter-select option { background: #1c2333; }
 
@@ -608,7 +646,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   max-height: 480px;
   overflow-y: auto;
 }
-.data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem;
+}
 .data-table thead tr th {
   background: var(--surface2);
   color: var(--cyan);
@@ -630,7 +669,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   white-space: nowrap;
 }
 .data-table tbody tr:last-child td { border-bottom: none; }
-.data-table tbody tr:hover td { background: var(--surface2); color: var(--text); }
+.data-table tbody tr:hover td { background: var(--surface2); color: var(--text);
+}
 .data-table tbody tr { transition: background 0.15s; }
 
 .status-select {
@@ -679,11 +719,13 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   color: var(--text3);
 }
 .empty-state-icon { font-size: 2.5rem; margin-bottom: 14px; opacity: 0.5; }
-.empty-state p { font-size: 0.88rem; }
+.empty-state p { font-size: 0.88rem;
+}
 
 /* ═══════════════════════════ MISC ═══════════════════════════ */
 .hidden { display: none !important; }
-.divider { height: 1px; background: var(--border); margin: 20px 0; }
+.divider { height: 1px; background: var(--border); margin: 20px 0;
+}
 </style>
 </head>
 <body>
@@ -751,6 +793,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
     </button>
     <button class="nav-item" onclick="switchTab('adm', this)">
       <span class="nav-icon">🏢</span> ADM Account List
+    </button>
+    <button class="nav-item" onclick="switchTab('pin', this)">
+      <span class="nav-icon">🔢</span> Universal PIN
     </button>
 
     <div class="sidebar-bottom">
@@ -845,7 +890,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
 
         <div class="panel hidden" id="reportTablePanel">
-          <div class="section-header">
+           <div class="section-header">
             <div class="section-title">Case Data</div>
             <button class="btn btn-success btn-sm" onclick="exportMyFilteredData()">
               <span>📤</span> Export Filtered
@@ -880,7 +925,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
       </div>
 
       <div class="tab-view hidden" id="tab-adm">
-        <div class="upload-zone" id="admDropZone" onclick="document.getElementById('admFileInput').click()">
+         <div class="upload-zone" id="admDropZone" onclick="document.getElementById('admFileInput').click()">
           <div class="upload-zone-icon">🏢</div>
           <h3>Drop your ADM Account List here</h3>
           <p>Accepts files containing <strong>ADM Account List</strong> in the filename (.xlsx / .xls / .csv)</p>
@@ -893,7 +938,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
 
         <div id="admSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
-          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved &amp; persistent</strong> — <span id="admSavedLabel">Last updated: —</span></span>
+          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="admSavedLabel">Last updated: —</span></span>
           <button class="btn btn-danger-ghost btn-sm" onclick="clearAdmData()">🗑 Clear Saved Data</button>
         </div>
 
@@ -903,14 +948,47 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
 
         <div class="panel hidden" id="admTablePanel">
-          <div class="section-title" style="margin-bottom:14px">ADM Directory</div>
+           <div class="section-title" style="margin-bottom:14px">ADM Directory</div>
           <div class="table-wrap">
             <table class="data-table" id="admDataTable"></table>
           </div>
         </div>
       </div>
+      
+      <div class="tab-view hidden" id="tab-pin">
+        <div class="upload-zone" id="pinDropZone" onclick="document.getElementById('pinFileInput').click()">
+          <div class="upload-zone-icon">🔢</div>
+          <h3>Drop your Universal PIN Datasheet here</h3>
+          <p>Accepts files containing <strong>PIN</strong> in the filename (.xlsx / .xls / .csv)</p>
+          <span class="upload-badge">Reads the First Sheet</span>
+          <input type="file" id="pinFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessPinFile(this.files[0])">
+        </div>
 
-    </div></div></div><div id="toast"></div>
+        <div id="pinUpdateRow" class="hidden" style="margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-amber" onclick="renderPinTable()">🔄 Update PIN List</button>
+        </div>
+
+        <div id="pinSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
+          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="pinSavedLabel">Last updated: —</span></span>
+          <button class="btn btn-danger-ghost btn-sm" onclick="clearPinData()">🗑 Clear Saved Data</button>
+        </div>
+
+        <div class="stats-row hidden" id="pinStats">
+          <div class="stat-card cyan"><div class="stat-icon">📌</div><div class="stat-label">Total PIN Entries</div><div class="stat-value" id="valTotalPinRows">0</div></div>
+          <div class="stat-card amber"><div class="stat-icon">📄</div><div class="stat-label">Source Sheet</div><div class="stat-value" style="font-size:1rem;padding-top:6px" id="valPinSheetName">—</div></div>
+        </div>
+
+        <div class="panel hidden" id="pinTablePanel">
+           <div class="section-header">
+            <div class="section-title">PIN Directory</div>
+            <input type="text" class="filter-input" id="pinSearchBox" onkeyup="applyPinFilters()" placeholder="🔍 Search PIN data..." style="max-width:320px;min-width:0">
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="pinDataTable"></table>
+          </div>
+        </div>
+      </div>
+      </div></div></div><div id="toast"></div>
 
 <script>
 /* ════════════════════════════════════════════════
@@ -948,7 +1026,8 @@ function attemptLogin() {
   const p = document.getElementById('loginPass').value;
   const err = document.getElementById('loginError');
   err.style.display = 'none';
-  if (!u || !p) { err.textContent = '⚠️ Please enter both username and password.'; err.style.display = 'block'; return; }
+  if (!u || !p) { err.textContent = '⚠️ Please enter both username and password.';
+  err.style.display = 'block'; return; }
   if (credentialsMap[u] && credentialsMap[u] === p) {
     loggedInUser = u;
     document.getElementById('sidebarUsername').textContent = u.charAt(0).toUpperCase() + u.slice(1);
@@ -1002,6 +1081,7 @@ const tabMeta = {
   report: { title: 'Open Case Report',     crumb: 'Case Management' },
   golden: { title: 'Golden Account List',  crumb: 'Account Ledger' },
   adm:    { title: 'ADM Account List',     crumb: 'ADM Directory' },
+  pin:    { title: 'Universal PIN Datasheet', crumb: 'PIN Directory' }, // NEW TAB
 };
 
 function switchTab(tabId, btn) {
@@ -1077,7 +1157,8 @@ function resetEmail() {
   document.getElementById('charCounter').textContent = '0 chars';
 }
 function copyEmail() {
-  if (!textarea.value.trim()) { toast('⚠️ No template selected — nothing to copy.', 'var(--amber)'); return; }
+  if (!textarea.value.trim()) { toast('⚠️ No template selected — nothing to copy.', 'var(--amber)'); return;
+  }
   navigator.clipboard.writeText(textarea.value).then(() => toast('✅ Email copied to clipboard!', 'var(--green)'));
 }
 
@@ -1105,7 +1186,7 @@ function saveToIndexedDB(headers, data) {
   st.put(data, 'cached_json_rows');
 }
 async function loadFromIndexedDB() {
-  if (!dbInstance) await initIndexedDB(); // fallback guard
+  if (!dbInstance) await initIndexedDB(); 
   const tx = dbInstance.transaction([STORE_NAME], 'readonly');
   const st = tx.objectStore(STORE_NAME);
   const rH = st.get('cached_headers'), rR = st.get('cached_json_rows');
@@ -1118,7 +1199,8 @@ async function loadFromIndexedDB() {
         caseIdColumnKey = globalDataHeaders.find(h => /caseid|casenumber/i.test(h.toLowerCase().replace(/[^a-z]/g,''))) || '';
         serialNumberColumnKey = globalDataHeaders.find(h => /serialnumber|serialno/i.test(h.toLowerCase().replace(/[^a-z]/g,''))) || '';
         let cachedDb = {};
-        try { cachedDb = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
+        try { cachedDb = JSON.parse(localStorage.getItem('acs_persistent_db')) || {};
+        } catch(e){}
         rowStatusStateArray = new Array(globalRawJsonData.length).fill('Pending');
         globalRawJsonData.forEach((row,i) => { const k = rowSig(row); if(k && cachedDb[k]) rowStatusStateArray[i] = cachedDb[k].statusValue || 'Pending'; });
         populateOwnerDropdown(); renderCaseTable();
@@ -1138,7 +1220,8 @@ function cleanExpired() {
 }
 function rowSig(row) {
   const c = caseIdColumnKey ? String(row[caseIdColumnKey]).trim() : '';
-  const s = serialNumberColumnKey ? String(row[serialNumberColumnKey]).trim() : '';
+  const s = serialNumberColumnKey ?
+  String(row[serialNumberColumnKey]).trim() : '';
   if(c||s) return `k_cid_${c}_sn_${s}`;
   return `k_hash_${btoa(unescape(encodeURIComponent(JSON.stringify(row)))).substring(0,24)}`;
 }
@@ -1158,7 +1241,8 @@ function processExcelFile(file) {
       const wb = XLSX.read(new Uint8Array(e.target.result), { type:'array' });
       const ws = wb.Sheets[wb.SheetNames[0]];
       globalRawJsonData = XLSX.utils.sheet_to_json(ws, { defval:'' });
-      if (!globalRawJsonData.length) { toast('⚠️ Spreadsheet appears empty.', 'var(--amber)'); return; }
+      if (!globalRawJsonData.length) { toast('⚠️ Spreadsheet appears empty.', 'var(--amber)'); return;
+      }
       globalDataHeaders = Object.keys(globalRawJsonData[0]);
       ownerColumnKey = globalDataHeaders.find(h => h.toLowerCase().trim() === 'owner') || '';
       caseIdColumnKey = globalDataHeaders.find(h => /caseid|casenumber/i.test(h.toLowerCase().replace(/[^a-z]/g,''))) || '';
@@ -1170,7 +1254,8 @@ function processExcelFile(file) {
       saveToIndexedDB(globalDataHeaders, globalRawJsonData);
       populateOwnerDropdown(); renderCaseTable();
       toast('✅ File loaded — statuses restored from local cache!', 'var(--green)');
-    } catch(err) { console.error(err); toast('❌ Parse error. Please use a valid .xlsx/.xls/.csv file.', 'var(--red)'); }
+    } catch(err) { console.error(err);
+      toast('❌ Parse error. Please use a valid .xlsx/.xls/.csv file.', 'var(--red)'); }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -1210,7 +1295,8 @@ function updateStatus(idx, val) {
   const row = globalRawJsonData[idx];
   if (row) {
     let db = {};
-    try { db = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
+    try { db = JSON.parse(localStorage.getItem('acs_persistent_db')) || {};
+    } catch(e){}
     db[rowSig(row)] = { statusValue: val, savedTimestamp: Date.now() };
     localStorage.setItem('acs_persistent_db', JSON.stringify(db));
   }
@@ -1261,8 +1347,10 @@ function applyFiltersAndMetrics() {
 }
 function exportMyFilteredData() {
   const owner = document.getElementById('ownerFilterDropdown').value;
-  if (!globalRawJsonData.length) { toast('⚠️ No data loaded yet.', 'var(--amber)'); return; }
-  if (!owner) { toast('⚠️ Select an Owner to export filtered data.', 'var(--amber)'); return; }
+  if (!globalRawJsonData.length) { toast('⚠️ No data loaded yet.', 'var(--amber)');
+  return; }
+  if (!owner) { toast('⚠️ Select an Owner to export filtered data.', 'var(--amber)'); return;
+  }
   const rows = [];
   const now = new Date();
   document.querySelectorAll('#parsedDataTable tbody tr').forEach(tr => {
@@ -1420,7 +1508,6 @@ function paintAdmTable(data, sheetName, savedAt) {
   // Set the new headers
   const headers = ['Subsidiary Legal Name', 'ADM Name', 'ADM/VRM'];
   let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
-  
   data.forEach(row => {
     h += `<tr>
       <td style="font-weight:600;color:var(--text)">${row['Subsidiary Legal Name'] || '-'}</td>
@@ -1463,10 +1550,8 @@ function renderAdmTable() {
   reader.onload = e => {
     try {
       const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      
       // Target explicitly the "AccountList" sheet (case-insensitive check to be safe)
       const targetSheetName = wb.SheetNames.find(name => name.replace(/\s+/g, '').toLowerCase() === 'accountlist');
-      
       if (!targetSheetName) {
         toast('⚠️ "AccountList" sheet not found in the workbook.', 'var(--amber)');
         return;
@@ -1474,10 +1559,9 @@ function renderAdmTable() {
 
       const ws = wb.Sheets[targetSheetName];
       const allRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-      
       if (!allRows.length) { 
         toast(`⚠️ Target sheet "${targetSheetName}" is empty.`, 'var(--amber)'); 
-        return; 
+        return;
       }
 
       const parsed = allRows.map(row => {
@@ -1493,7 +1577,8 @@ function renderAdmTable() {
           "ADM Name": admNameKey ? row[admNameKey] : '',
           "ADM/VRM": admVrmKey ? row[admVrmKey] : ''
         };
-      }).filter(r => r["Subsidiary Legal Name"] !== '' || r["ADM Name"] !== '' || r["ADM/VRM"] !== ''); // Filter out completely empty rows
+      }).filter(r => r["Subsidiary Legal Name"] !== '' || r["ADM Name"] !== '' || r["ADM/VRM"] !== '');
+      // Filter out completely empty rows
 
       if (!parsed.length) {
         toast(`⚠️ No matching columns found on sheet "${targetSheetName}".`, 'var(--amber)');
@@ -1501,7 +1586,7 @@ function renderAdmTable() {
       }
 
       const savedAt = Date.now();
-      saveAdmToIndexedDB(parsed, targetSheetName, savedAt);  // ← persist
+      saveAdmToIndexedDB(parsed, targetSheetName, savedAt); // ← persist
       paintAdmTable(parsed, targetSheetName, savedAt);
       toast(`💾 ADM list saved — ${parsed.length} entries from "${targetSheetName}"`, 'var(--green)');
     } catch (err) {
@@ -1535,13 +1620,145 @@ admDZ.addEventListener('drop', e => {
   const f = e.dataTransfer.files[0]; if (f) validateAndProcessAdmFile(f);
 });
 
+/* ════════════════════════════════════════════════
+   UNIVERSAL PIN DATASHEET — (NEW MODULE)
+════════════════════════════════════════════════ */
+let pinRawData = [], pinHeaders = [], pinPendingFile = null;
+
+function savePinToIndexedDB(headers, data, sheetName, timestamp) {
+  if (!dbInstance) return;
+  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
+  const st = tx.objectStore(STORE_NAME);
+  st.put({ headers, rows: data, sheetName, savedAt: timestamp }, 'pin_data');
+}
+
+function loadPinFromIndexedDB() {
+  return new Promise((resolve) => {
+    if (!dbInstance) { resolve(null); return; }
+    const tx = dbInstance.transaction([STORE_NAME], 'readonly');
+    const req = tx.objectStore(STORE_NAME).get('pin_data');
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror   = () => resolve(null);
+  });
+}
+
+function deletePinFromIndexedDB() {
+  if (!dbInstance) return;
+  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
+  tx.objectStore(STORE_NAME).delete('pin_data');
+}
+
+function paintPinTable(headers, data, sheetName, savedAt) {
+  pinRawData = data;
+  pinHeaders = headers;
+  const table = document.getElementById('pinDataTable');
+
+  let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
+  data.forEach(row => {
+    h += `<tr>`;
+    headers.forEach(c => {
+        h += `<td>${row[c] || '-'}</td>`;
+    });
+    h += `</tr>`;
+  });
+  h += '</tbody>';
+  table.innerHTML = h;
+
+  document.getElementById('valTotalPinRows').textContent = data.length;
+  document.getElementById('valPinSheetName').textContent = sheetName;
+  document.getElementById('pinStats').classList.remove('hidden');
+  document.getElementById('pinTablePanel').classList.remove('hidden');
+
+  const label = savedAt
+    ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
+    : 'Last updated: just now';
+  document.getElementById('pinSavedLabel').textContent = label;
+  document.getElementById('pinSavedBanner').classList.remove('hidden');
+}
+
+function validateAndProcessPinFile(file) {
+  if (!file) return;
+  const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (!name.includes('pin')) {
+    toast('❌ Rejected: filename must contain "PIN"', 'var(--red)');
+    document.getElementById('pinFileInput').value = ''; return;
+  }
+  pinPendingFile = file;
+  document.getElementById('pinUpdateRow').classList.remove('hidden');
+  toast('✅ PIN File accepted — click "Update PIN List" to save.', 'var(--green)');
+}
+
+function renderPinTable() {
+  if (!pinPendingFile) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const sheetName = wb.SheetNames[0]; // Reads the first sheet
+      const ws = wb.Sheets[sheetName];
+      const allRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+      
+      if (!allRows.length) {
+        toast(`⚠️ Sheet "${sheetName}" is empty.`, 'var(--amber)');
+        return;
+      }
+
+      const headers = Object.keys(allRows[0]);
+      const savedAt = Date.now();
+      savePinToIndexedDB(headers, allRows, sheetName, savedAt);
+      paintPinTable(headers, allRows, sheetName, savedAt);
+      toast(`💾 PIN list saved — ${allRows.length} entries loaded`, 'var(--green)');
+    } catch (err) {
+      console.error(err);
+      toast('❌ File parse error. Ensure it is a valid spreadsheet.', 'var(--red)');
+    }
+  };
+  reader.readAsArrayBuffer(pinPendingFile);
+}
+
+function clearPinData() {
+  if (!confirm('Remove the saved PIN Datasheet from local storage? You will need to re-upload the file.')) return;
+  deletePinFromIndexedDB();
+  pinRawData = [];
+  pinHeaders = [];
+  pinPendingFile = null;
+  document.getElementById('pinDataTable').innerHTML = '';
+  document.getElementById('pinStats').classList.add('hidden');
+  document.getElementById('pinTablePanel').classList.add('hidden');
+  document.getElementById('pinSavedBanner').classList.add('hidden');
+  document.getElementById('pinUpdateRow').classList.add('hidden');
+  document.getElementById('pinFileInput').value = '';
+  toast('🗑 PIN data cleared from local storage.', 'var(--amber)');
+}
+
+function applyPinFilters() {
+    const q = document.getElementById('pinSearchBox').value.toLowerCase().trim();
+    let n = 0;
+    document.querySelectorAll('#pinDataTable tbody tr').forEach((row, i) => {
+      const text = Object.values(pinRawData[i]).join(' ').toLowerCase();
+      const show = !q || text.includes(q);
+      row.style.display = show ? '' : 'none';
+      if (show) n++;
+    });
+}
+
+const pinDZ = document.getElementById('pinDropZone');
+pinDZ.addEventListener('dragover', e => { e.preventDefault(); pinDZ.classList.add('drag-over'); });
+pinDZ.addEventListener('dragleave', () => pinDZ.classList.remove('drag-over'));
+pinDZ.addEventListener('drop', e => {
+  e.preventDefault(); pinDZ.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0]; if (f) validateAndProcessPinFile(f);
+});
+
 /* ─── Boot sequence ─── */
 window.addEventListener('DOMContentLoaded', async () => {
   cleanExpired();
   initGoldenTable();
   try { await initIndexedDB(); } catch(e) { console.log('IndexedDB init error', e); }
+  
   // Restore Open Case Report
   try { await loadFromIndexedDB(); } catch(e) { console.log('No prior case DB cache.', e); }
+  
   // Restore ADM list
   try {
     const saved = await loadAdmFromIndexedDB();
@@ -1550,6 +1767,15 @@ window.addEventListener('DOMContentLoaded', async () => {
       toast('🔄 ADM list restored from last saved session.', 'var(--purple)');
     }
   } catch(e) { console.log('No prior ADM cache.', e); }
+  
+  // Restore PIN list (NEW)
+  try {
+    const savedPin = await loadPinFromIndexedDB();
+    if (savedPin && savedPin.rows && savedPin.rows.length > 0) {
+      paintPinTable(savedPin.headers, savedPin.rows, savedPin.sheetName, savedPin.savedAt);
+      toast('🔄 PIN list restored from last saved session.', 'var(--purple)');
+    }
+  } catch(e) { console.log('No prior PIN cache.', e); }
 });
 </script>
 </body>
