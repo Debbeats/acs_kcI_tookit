@@ -838,7 +838,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
                 <textarea class="email-textarea" id="emailTextArea" placeholder="Select a template from the left panel to generate the email body here. You can edit it before copying."></textarea>
               </div>
               <div class="action-row">
+                <button class="btn btn-danger-ghost" id="btnRevertTpl" style="display:none" onclick="revertCustomTemplate()">🗑 Revert to Default</button>
                 <button class="btn btn-ghost" onclick="resetEmail()">↺ Reset</button>
+                <button class="btn btn-success" onclick="saveCustomTemplate()">💾 Save Format</button>
                 <button class="btn btn-primary" onclick="copyEmail()">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                   Copy Email
@@ -865,7 +867,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
 
         <div class="panel hidden" id="reportTablePanel">
-            <div class="section-header">
+          <div class="section-header">
             <div class="section-title">Case Data</div>
             <button class="btn btn-success btn-sm" onclick="exportMyFilteredData()">
               <span>📤</span> Export Filtered
@@ -1029,6 +1031,7 @@ function parseCredentials(raw) {
 }
 const credentialsMap = parseCredentials(CREDENTIALS_FILE);
 let loggedInUser = '';
+let activeTemplateId = null; // Track current active template ID for saving functionality
 
 /* ─── Login logic ─── */
 function attemptLogin() {
@@ -1037,6 +1040,7 @@ function attemptLogin() {
   const err = document.getElementById('loginError');
   err.style.display = 'none';
   if (!u || !p) { err.textContent = '⚠️ Please enter both username and password.'; err.style.display = 'block'; return; }
+  
   if (credentialsMap[u] && credentialsMap[u] === p) {
     loggedInUser = u;
     document.getElementById('sidebarUsername').textContent = u.charAt(0).toUpperCase() + u.slice(1);
@@ -1057,6 +1061,7 @@ function attemptLogin() {
 
 function doLogout() {
   loggedInUser = '';
+  activeTemplateId = null;
   document.getElementById('loginUser').value = '';
   document.getElementById('loginPass').value = '';
   document.getElementById('loginError').style.display = 'none';
@@ -1065,6 +1070,7 @@ function doLogout() {
   ls.style.display = 'flex';
   ls.style.opacity = '0';
   setTimeout(() => { ls.style.transition = 'opacity 0.3s'; ls.style.opacity = '1'; }, 10);
+  resetEmail(); // Reset KCI state on logout
 }
 
 /* Enter key triggers login */
@@ -1091,7 +1097,7 @@ const tabMeta = {
   golden:     { title: 'Golden Account List',  crumb: 'Account Ledger' },
   adm:        { title: 'ADM Account List',     crumb: 'ADM Directory' },
   pin:        { title: 'Universal PIN Datasheet', crumb: 'PIN Directory' }, 
-  advisories: { title: 'Known Advisories',     crumb: 'Advisories Directory' } // NEW TAB
+  advisories: { title: 'Known Advisories',     crumb: 'Advisories Directory' }
 };
 
 function switchTab(tabId, btn) {
@@ -1120,10 +1126,10 @@ function toast(msg, color) {
 ════════════════════════════════════════════════ */
 const emailTemplates = [
   { id:"initial_followup", title:"Initial Follow Up", icon:"📧", content:`Dear Customer,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nBased on our telephonic interaction today, please find the case details below.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team will reach out to you soon with an update.\nIf any concern arises, please contact our technical support toll-free line anytime.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
-  { id:"first_followup", title:"1st Follow Up", icon:"1️⃣", content:`Hello Sir,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team tried calling you but did not get any response.\nWe will once again reach out to you shortly. If any concern arises, please contact our technical support toll-free number immediately.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
-  { id:"second_followup", title:"2nd Follow Up", icon:"2️⃣", content:`Hello Sir,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team made a second attempt to reach you, but we were unable to connect.\nWe will try one more time. If you need immediate support, please call our toll-free number at your earliest convenience.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
+  { id:"first_followup", title:"1st Follow Up", icon:"1️⃣", content:`Hello Sir,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team tried calling you but did not get any response.\nWe will once again reach out to you shortly.\nIf any concern arises, please contact our technical support toll-free number immediately.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
+  { id:"second_followup", title:"2nd Follow Up", icon:"2️⃣", content:`Hello Sir,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team made a second attempt to reach you, but we were unable to connect.\nWe will try one more time.\nIf you need immediate support, please call our toll-free number at your earliest convenience.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
   { id:"final_ncm", title:"Final Follow Up / NCM Mail", icon:"🚨", content:`Hello Sir,\n\nGreetings from HP!\n\nMy name is [Agent Name], and I am from the HP Technical Support Team.\nI hope you are doing well.\n\nThis is our final attempt to contact you regarding your open case.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nWe have made multiple attempts to reach you but were unable to connect.\nAs a result, we will be proceeding to close your case, assuming the issue has been resolved.\n\nIf you still require assistance, please contact us on our toll-free number 1800-258-7170 (IVR: 1-1-7 or 2-1-7).\nWorking hours: Monday to Friday, 9:00 AM – 6:00 PM.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.\n\nFor HP privacy practices: www.hp.com/privacy |\nDisclaimer: http://www.hp.com/support/emaildisclaimers` },
-  { id:"idr_logs", title:"IDR Logs Extraction", icon:"📊", content:`Dear Customer,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nBased on the telephonic interaction we had earlier today, please find the case details below.\n\nIssue Reported : BSOD Issue\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nPlease find the link to download and capture the IDR log for the unit.\n\nImage Diagnostic Report Download Link:\nhttps://ftp.hp.com/pub/idr/ImageDiags4/ImageDiags.exe\n\nSteps to Execute:\n1.\nDownload the ImageDiags executable tool.\n2. Extract and run the setup application.\n3.\nWhile Command Prompt (CMD) is running, enter Y — a text file will be created on the desktop: IDR_[serial number].txt\n4.\nShare the output IDR text file back to this email thread.\n\nNOTE: The full diagnostic process typically takes 30–40 minutes.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
+  { id:"idr_logs", title:"IDR Logs Extraction", icon:"📊", content:`Dear Customer,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nBased on the telephonic interaction we had earlier today, please find the case details below.\n\nIssue Reported : BSOD Issue\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nPlease find the link to download and capture the IDR log for the unit.\n\nImage Diagnostic Report Download Link:\nhttps://ftp.hp.com/pub/idr/ImageDiags4/ImageDiags.exe\n\nSteps to Execute:\n1.\nDownload the ImageDiags executable tool.\n2.\nExtract and run the setup application.\n3.\nWhile Command Prompt (CMD) is running, enter Y — a text file will be created on the desktop: IDR_[serial number].txt\n4.\nShare the output IDR text file back to this email thread.\n\nNOTE: The full diagnostic process typically takes 30–40 minutes.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
   { id:"warranty_update", title:"Warranty Invalidation/Update", icon:"🗓️", content:`Dear Customer,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nBased on our telephonic interaction today, please find the case details below.\n\nIssue Reported : Warranty Mismatch\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nWarranty start date has been entitled as per the validated copy of invoice documentation.\n\nPlease verify your information using the HP Support Portal:\nhttps://support.hp.com/in-en\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
   { id:"snap_shot", title:"Snapshot Request", icon:"📸", content:`Dear Customer,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nBased on the telephonic interaction we had earlier today, please find the case details below.\n\nIssue Reported: [Enter Issue]\nCase Number: [Enter Case Number]\nSerial Number: [Enter Serial Number]\n\nPlease reply to this email with the 360-degree snapshot of the unit along with an invoice Copy without changing the subject line.\n\nOnce again, thank you for contacting HP.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
   { id:"battery_design", title:"Battery As Per Design", icon:"🔋", content:`Dear Customer,\n\nThank you for contacting HP Care.\n\nIssue Reported \n: Battery Backup Issue\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial ID]\n\nThe battery validation team confirmed the battery is working as per its design specifications.\n\nWe recommend performing an administrative battery calibration cycle.\nPlease refer to:\n\nHP Tutorial: https://www.youtube.com/watch?v=wgsLomzvr5E&t=74s\nHP Documentation: https://support.hp.com/us-en/document/ish_2268927-1713329-16\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
@@ -1131,15 +1137,16 @@ const emailTemplates = [
   { id:"de_escalation", title:"De-Escalation Request", icon:"🕊️", content:`Thank you for your continued patronage towards HP!\n\nBeing a valued customer, we assure you of our timely assistance.\nBased on our telephonic interaction today, please share your formal request details via this email thread so we can process the tracking structure at the earliest.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
   { id:"cid_damage", title:"Customer Induced Damage", icon:"❌", content:`Dear Customer,\n\nThank you for contacting HP Care.\n\nIssue Reported : Display Issue\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nAs per the snapshots shared, this issue will not be covered under standard manufacturer warranty.\nIt exhibits impact damage within the screen assembly matrix.\n\nPhysical damage and structural wear & tear are only supported on a chargeable customer-invoice basis.\nPart allocation remains subject to quotation validation.\n\nFor further information:\nhttps://support.hp.com/bg-en/document/ish_4158852-3236832-16\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
   { id:"out_of_country", title:"Out Of Country Purchase", icon:"✈️", content:`Dear Customer,\n\nThank you for contacting HP Care.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nAs per remote hardware diagnostics, the motherboard is faulty.\nUpon checking, the unit is classified as an out-of-country purchase and falls outside local regional warranty parameters.\n\nLocalized hardware support in India is subject to part availability.\nThe required part is not stocked in India.\n\nFor assistance, please contact the country of purchase:\nUS HP Toll Free: 1-(800)-108-4747 & 1-(800)-334-5144\nGlobal Commerce: https://www.hp.com/us-en/shop/cv/customerservice\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
-  { id:"callback_followup", title:"Call-Back Follow Up", icon:"🔁", content:`Hello Sir,\n\nThank you for contacting HP Care.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team tried calling you but did not get a response.\nWe will arrange an active callback once more. For immediate concerns, please contact our toll-free number.\n\nFor feedback or management concerns: india.feedback@hp.com\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
+  { id:"callback_followup", title:"Call-Back Follow Up", icon:"🔁", content:`Hello Sir,\n\nThank you for contacting HP Care.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team tried calling you but did not get a response.\nWe will arrange an active callback once more.\nFor immediate concerns, please contact our toll-free number.\n\nFor feedback or management concerns: india.feedback@hp.com\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
   { id:"battery_report_steps", title:"Battery Diagnostic Steps", icon:"📊", content:`Dear Customer,\n\nPlease find below the command steps to extract your device health power configuration files.\n\n1.\nBattery Energy Diagnostic Report:\n   - Start → Search 'Command Prompt' → Right-Click → Run as Administrator\n   - Type: powercfg -energy → Press Enter\n   - Report generated in 60 seconds: energy-report.html\n\n2.\nBattery Hardware Capacity Report:\n   - Open Command Prompt (Admin) as above\n   - Type: powercfg /batteryreport → Press Enter\n   - Open the resulting Battery report HTML file\n\nKindly compress and send these HTML logs as attachments.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
-  { id:"closure_resolved", title:"Case Closure / Resolved", icon:"✅", content:`Hello Sir,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nAs per your explicit confirmation, the reported device issue is fully resolved.\nWe are proceeding to log case closure. If any subsequent issues surface, please contact our technical support toll-free line anytime.\n\nFor concerns or feedback: kavya.bs@hp.com\n\nOnce again, thank you for contacting HP.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
+  { id:"closure_resolved", title:"Case Closure / Resolved", icon:"✅", content:`Hello Sir,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nAs per your explicit confirmation, the reported device issue is fully resolved.\nWe are proceeding to log case closure.\nIf any subsequent issues surface, please contact our technical support toll-free line anytime.\n\nFor concerns or feedback: kavya.bs@hp.com\n\nOnce again, thank you for contacting HP.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
   { id:"closure_rr", title:"Closure For RR (No Contact)", icon:"🔒", content:`Hello Sir,\nGreetings from HP!\n\nMy name is [Agent Name], and I am from the HP Technical Support Team.\n\nWe tried reaching you but were unable to connect.\nAs we have not heard back, we will proceed to close your case (Case ID: [Case ID]), assuming the issue has been resolved.\n\nIf you still need assistance, please contact us:\nToll-free: 1800-258-7170 (IVR: 1-1-7 or 2-1-7)\nWorking Hours: Monday to Friday, 9:00 AM – 6:00 PM\n\nThank you for your time and patience.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\n\nHP Privacy: www.hp.com/privacy |\nDisclaimer: http://www.hp.com/support/emaildisclaimers` },
 ];
 
 /* Build template grid */
 const grid = document.getElementById('templateGrid');
 const textarea = document.getElementById('emailTextArea');
+
 emailTemplates.forEach(tpl => {
   const btn = document.createElement('button');
   btn.className = 'tpl-btn';
@@ -1151,21 +1158,84 @@ emailTemplates.forEach(tpl => {
 document.getElementById('statTemplateCount').textContent = emailTemplates.length;
 
 function selectTemplate(id, title, content) {
+  activeTemplateId = id;
   document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tpl-' + id).classList.add('active');
-  textarea.value = content;
+  
+  // Check if current agent has a customized version of this template saved
+  let savedCustomTemplates = {};
+  try {
+     savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {};
+  } catch(e) {}
+
+  const revertBtn = document.getElementById('btnRevertTpl');
+  if (savedCustomTemplates[id]) {
+      textarea.value = savedCustomTemplates[id];
+      revertBtn.style.display = 'inline-flex'; // Show revert option
+  } else {
+      textarea.value = content;
+      revertBtn.style.display = 'none';
+  }
+  
   document.getElementById('selectedTplLabel').textContent = title;
-  document.getElementById('charCounter').textContent = content.length + ' chars';
+  document.getElementById('charCounter').textContent = textarea.value.length + ' chars';
 }
+
 textarea.addEventListener('input', () => {
   document.getElementById('charCounter').textContent = textarea.value.length + ' chars';
 });
+
+function saveCustomTemplate() {
+  if (!activeTemplateId) {
+     toast('⚠️ No template selected to save.', 'var(--amber)');
+     return;
+  }
+  
+  let savedCustomTemplates = {};
+  try {
+     savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {};
+  } catch(e) {}
+
+  // Save the current textarea value directly to the user's localstorage object
+  savedCustomTemplates[activeTemplateId] = textarea.value;
+  localStorage.setItem('acs_custom_templates_' + loggedInUser, JSON.stringify(savedCustomTemplates));
+
+  document.getElementById('btnRevertTpl').style.display = 'inline-flex';
+  toast('💾 Template format saved for your account!', 'var(--green)');
+}
+
+function revertCustomTemplate() {
+   if (!activeTemplateId) return;
+   
+   let savedCustomTemplates = {};
+   try {
+      savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {};
+   } catch(e) {}
+
+   // Delete custom template and resave
+   delete savedCustomTemplates[activeTemplateId];
+   localStorage.setItem('acs_custom_templates_' + loggedInUser, JSON.stringify(savedCustomTemplates));
+
+   // Reload the default template text
+   const originalTpl = emailTemplates.find(t => t.id === activeTemplateId);
+   if (originalTpl) {
+       textarea.value = originalTpl.content;
+   }
+   
+   document.getElementById('btnRevertTpl').style.display = 'none';
+   document.getElementById('charCounter').textContent = textarea.value.length + ' chars';
+   toast('🗑 Reverted to default template format.', 'var(--amber)');
+}
+
 function resetEmail() {
+  activeTemplateId = null;
   textarea.value = '';
   document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('selectedTplLabel').textContent = 'No template selected';
   document.getElementById('charCounter').textContent = '0 chars';
+  document.getElementById('btnRevertTpl').style.display = 'none';
 }
+
 function copyEmail() {
   if (!textarea.value.trim()) { toast('⚠️ No template selected — nothing to copy.', 'var(--amber)'); return; }
   navigator.clipboard.writeText(textarea.value).then(() => toast('✅ Email copied to clipboard!', 'var(--green)'));
@@ -1261,7 +1331,7 @@ function processExcelFile(file) {
       populateOwnerDropdown(); renderCaseTable();
       toast('✅ File loaded — statuses restored from local cache!', 'var(--green)');
     } catch(err) { console.error(err);
-    toast('❌ Parse error. Please use a valid .xlsx/.xls/.csv file.', 'var(--red)'); }
+      toast('❌ Parse error. Please use a valid .xlsx/.xls/.csv file.', 'var(--red)'); }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -1314,22 +1384,18 @@ function updateStatus(idx, val) {
   if (val === 'NCM1') {
     const t = emailTemplates.find(t => t.id === 'first_followup');
     if (t) {
-      textarea.value = t.content;
-      document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
-      const tb = document.getElementById('tpl-first_followup');
-      if (tb) tb.classList.add('active');
-      navigator.clipboard.writeText(t.content).catch(()=>{});
+      // Use the selectTemplate wrapper so customizations trigger for NCM auto-load
+      selectTemplate(t.id, t.title, t.content);
+      navigator.clipboard.writeText(textarea.value).catch(()=>{});
       toast('📋 NCM set — 1st Follow Up email auto-loaded & copied!', 'var(--red)');
     }
   }
   if (val === 'NCM2') {
     const t = emailTemplates.find(t => t.id === 'second_followup');
     if (t) {
-      textarea.value = t.content;
-      document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
-      const tb = document.getElementById('tpl-second_followup');
-      if (tb) tb.classList.add('active');
-      navigator.clipboard.writeText(t.content).catch(()=>{});
+      // Use the selectTemplate wrapper so customizations trigger for NCM auto-load
+      selectTemplate(t.id, t.title, t.content);
+      navigator.clipboard.writeText(textarea.value).catch(()=>{});
       toast('📋 NCM set — 2nd Follow Up email auto-loaded & copied!', 'var(--red)');
     }
   }
@@ -1437,7 +1503,6 @@ const goldenAccountsRawData = [
   {"Zone CS":"South","Account Name":"WIPRO LIMITED - IN","ADM/ VRM Name":"T R Anand Kumar","FY26 GTM":"India Inc/PSU"},
   {"Zone CS":"North","Account Name":"ZOMATO - IN","ADM/ VRM Name":"Nitin Tyagi","FY26 GTM":"India Inc/PSU"}
 ];
-
 function initGoldenTable() {
   const table = document.getElementById('goldenDataTable');
   const headers = Object.keys(goldenAccountsRawData[0]);
@@ -1476,7 +1541,6 @@ function applyGoldenFilters() {
    ADM ACCOUNT LIST — with IndexedDB persistence
 ════════════════════════════════════════════════ */
 let admRawData = [], admPendingFile = null;
-
 /* ── Save ADM data into IndexedDB ── */
 function saveAdmToIndexedDB(data, sheetName, timestamp) {
   if (!dbInstance) return;
@@ -1525,7 +1589,6 @@ function paintAdmTable(data, sheetName, savedAt) {
   document.getElementById('valAdmSheetName').textContent = sheetName;
   document.getElementById('admStats').classList.remove('hidden');
   document.getElementById('admTablePanel').classList.remove('hidden');
-
   // Show the persistent-save banner with timestamp
   const label = savedAt
     ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
@@ -1553,7 +1616,6 @@ function renderAdmTable() {
   reader.onload = e => {
     try {
       const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-
       // Target explicitly the "AccountList" sheet (case-insensitive check to be safe)
       const targetSheetName = wb.SheetNames.find(name => name.replace(/\s+/g, '').toLowerCase() === 'accountlist');
       if (!targetSheetName) {
@@ -1590,7 +1652,7 @@ function renderAdmTable() {
       }
 
       const savedAt = Date.now();
-      saveAdmToIndexedDB(parsed, targetSheetName, savedAt); // ← persist
+      saveAdmToIndexedDB(parsed, targetSheetName, savedAt);
       paintAdmTable(parsed, targetSheetName, savedAt);
       toast(`💾 ADM list saved — ${parsed.length} entries from "${targetSheetName}"`, 'var(--green)');
     } catch (err) {
@@ -1755,7 +1817,6 @@ pinDZ.addEventListener('drop', e => {
    KNOWN ADVISORIES — (NEW MODULE)
 ════════════════════════════════════════════════ */
 let advRawData = [], advPendingFile = null;
-
 function saveAdvToIndexedDB(data, timestamp) {
   if (!dbInstance) return;
   const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
@@ -1797,7 +1858,6 @@ function paintAdvList(data, savedAt) {
   advRawData = data;
   const container = document.getElementById('advAccordionContainer');
   let html = '';
-  
   data.forEach((adv) => {
     html += `
     <div class="adv-item" data-name="${adv.name.replace(/"/g, '&quot;').toLowerCase()}">
@@ -1811,6 +1871,7 @@ function paintAdvList(data, savedAt) {
     adv.content.forEach(row => {
       if (!row || row.length === 0) return;
       html += '<tr>';
+     
       row.forEach(cell => {
         html += `<td>${renderImageLinks(cell !== undefined ? cell : '')}</td>`;
       });
@@ -1950,7 +2011,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   } catch(e) { console.log('No prior PIN cache.', e); }
 
-  // Restore Advisories List (NEW)
+  // Restore Advisories List
   try {
     const savedAdv = await loadAdvFromIndexedDB();
     if (savedAdv && savedAdv.advisories && savedAdv.advisories.length > 0) {
