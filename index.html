@@ -440,8 +440,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 }
 .panel-title::after {
   content: '';
-  flex: 1;
-  height: 1px;
+  flex: 1; height: 1px;
   background: var(--border);
 }
 
@@ -464,8 +463,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   cursor: pointer;
   transition: all 0.2s;
   display: flex; align-items: center; gap: 10px;
-  position: relative;
-  overflow: hidden;
+  position: relative; overflow: hidden;
 }
 .tpl-btn::before {
   content: '';
@@ -486,8 +484,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   width: 30px; height: 30px;
   background: var(--surface3);
   border-radius: 6px;
-  display: flex;
-  align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   font-size: 0.9rem;
   flex-shrink: 0;
   transition: background 0.2s;
@@ -507,8 +504,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   background: var(--surface2);
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 0.78rem;
-  color: var(--text3);
+  font-size: 0.78rem; color: var(--text3);
 }
 .email-textarea {
   width: 100%;
@@ -526,8 +522,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 
 /* ═══════════════════════════ BUTTONS ═══════════════════════════ */
 .btn {
-  display: inline-flex; align-items: center;
-  gap: 8px;
+  display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 22px;
   border-radius: var(--radius-sm);
   font-family: var(--font);
@@ -654,15 +649,13 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 /* ═══════════════════════════ TOAST ═══════════════════════════ */
 #toast {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
+  bottom: 28px; right: 28px;
   background: var(--surface2);
   border: 1px solid var(--border-bright);
   border-left: 3px solid var(--cyan);
   padding: 14px 20px;
   border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.85rem; font-weight: 500;
   color: var(--text);
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
   opacity: 0;
@@ -675,11 +668,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 #toast.show { opacity: 1; transform: none; }
 
 /* ═══════════════════════════ EMPTY STATE ═══════════════════════════ */
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text3);
-}
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
 .empty-state-icon { font-size: 2.5rem; margin-bottom: 14px; opacity: 0.5; }
 .empty-state p { font-size: 0.88rem; }
 
@@ -768,6 +757,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
     </button>
     <button class="nav-item" onclick="switchTab('pin', this)">
       <span class="nav-icon">🔢</span> Universal PIN
+    </button>
+    <button class="nav-item" onclick="switchTab('pml', this)">
+      <span class="nav-icon">🗺️</span> PML List
     </button>
     <button class="nav-item" onclick="switchTab('advisories', this)">
       <span class="nav-icon">📢</span> Known Advisories
@@ -871,7 +863,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
             <div class="section-title">Case Data</div>
             <button class="btn btn-success btn-sm" onclick="exportMyFilteredData()">
               <span>📤</span> Export Filtered
-            </button>
+             </button>
           </div>
           <div class="filter-row">
             <select class="filter-select" id="ownerFilterDropdown" onchange="applyFiltersAndMetrics()">
@@ -896,7 +888,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
             <input type="text" class="filter-input" id="goldenSearchBox" onkeyup="applyGoldenFilters()" placeholder="🔍 Search accounts, managers, zones..." style="max-width:320px;min-width:0">
           </div>
           <div class="table-wrap">
-            <table class="data-table" id="goldenDataTable"></table>
+             <table class="data-table" id="goldenDataTable"></table>
           </div>
         </div>
       </div>
@@ -925,7 +917,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
 
         <div class="panel hidden" id="admTablePanel">
-           <div class="section-title" style="margin-bottom:14px">ADM Directory</div>
+            <div class="section-title" style="margin-bottom:14px">ADM Directory</div>
           <div class="table-wrap">
             <table class="data-table" id="admDataTable"></table>
           </div>
@@ -961,11 +953,44 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
             <input type="text" class="filter-input" id="pinSearchBox" onkeyup="applyPinFilters()" placeholder="🔍 Search PIN data..." style="max-width:320px;min-width:0">
           </div>
           <div class="table-wrap">
-            <table class="data-table" id="pinDataTable"></table>
+             <table class="data-table" id="pinDataTable"></table>
           </div>
         </div>
       </div>
 
+      <div class="tab-view hidden" id="tab-pml">
+        <div class="upload-zone" id="pmlDropZone" onclick="document.getElementById('pmlFileInput').click()">
+          <div class="upload-zone-icon">🗺️</div>
+          <h3>Drop your PML List here</h3>
+          <p>Accepts files containing <strong>PML</strong> in the filename (.xlsx / .xls / .csv)</p>
+          <span class="upload-badge">Extracts Region, CDAX, State, City, PAM, and SDC</span>
+          <input type="file" id="pmlFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessPmlFile(this.files[0])">
+        </div>
+
+        <div id="pmlUpdateRow" class="hidden" style="margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-amber" onclick="renderPmlTable()">🔄 Update PML List</button>
+        </div>
+
+        <div id="pmlSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
+          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="pmlSavedLabel">Last updated: —</span></span>
+          <button class="btn btn-danger-ghost btn-sm" onclick="clearPmlData()">🗑 Clear Saved Data</button>
+        </div>
+
+        <div class="stats-row hidden" id="pmlStats">
+          <div class="stat-card cyan"><div class="stat-icon">🗺️</div><div class="stat-label">Total PML Entries</div><div class="stat-value" id="valTotalPmlRows">0</div></div>
+          <div class="stat-card amber"><div class="stat-icon">🔍</div><div class="stat-label">Visible Matches</div><div class="stat-value" id="valFilteredPmlRows">0</div></div>
+        </div>
+
+        <div class="panel hidden" id="pmlTablePanel">
+           <div class="section-header">
+             <div class="section-title">PML Directory</div>
+            <input type="text" class="filter-input" id="pmlSearchBox" onkeyup="applyPmlFilters()" placeholder="🔍 Search Region, State, City, PAM, SDC..." style="max-width:320px;min-width:0">
+          </div>
+          <div class="table-wrap">
+             <table class="data-table" id="pmlDataTable"></table>
+          </div>
+        </div>
+      </div>
       <div class="tab-view hidden" id="tab-advisories">
         <div class="upload-zone" id="advDropZone" onclick="document.getElementById('advFileInput').click()">
           <div class="upload-zone-icon">📢</div>
@@ -980,7 +1005,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
 
         <div id="advSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
-          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="advSavedLabel">Last updated: —</span></span>
+           <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="advSavedLabel">Last updated: —</span></span>
           <button class="btn btn-danger-ghost btn-sm" onclick="clearAdvData()">🗑 Clear Saved Data</button>
         </div>
 
@@ -1070,7 +1095,7 @@ function doLogout() {
   ls.style.display = 'flex';
   ls.style.opacity = '0';
   setTimeout(() => { ls.style.transition = 'opacity 0.3s'; ls.style.opacity = '1'; }, 10);
-  resetEmail(); // Reset KCI state on logout
+  resetEmail();
 }
 
 /* Enter key triggers login */
@@ -1097,6 +1122,7 @@ const tabMeta = {
   golden:     { title: 'Golden Account List',  crumb: 'Account Ledger' },
   adm:        { title: 'ADM Account List',     crumb: 'ADM Directory' },
   pin:        { title: 'Universal PIN Datasheet', crumb: 'PIN Directory' }, 
+  pml:        { title: 'PML List',             crumb: 'PML Directory' }, // Added PML meta
   advisories: { title: 'Known Advisories',     crumb: 'Advisories Directory' }
 };
 
@@ -1142,11 +1168,9 @@ const emailTemplates = [
   { id:"closure_resolved", title:"Case Closure / Resolved", icon:"✅", content:`Hello Sir,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nAs per your explicit confirmation, the reported device issue is fully resolved.\nWe are proceeding to log case closure.\nIf any subsequent issues surface, please contact our technical support toll-free line anytime.\n\nFor concerns or feedback: kavya.bs@hp.com\n\nOnce again, thank you for contacting HP.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
   { id:"closure_rr", title:"Closure For RR (No Contact)", icon:"🔒", content:`Hello Sir,\nGreetings from HP!\n\nMy name is [Agent Name], and I am from the HP Technical Support Team.\n\nWe tried reaching you but were unable to connect.\nAs we have not heard back, we will proceed to close your case (Case ID: [Case ID]), assuming the issue has been resolved.\n\nIf you still need assistance, please contact us:\nToll-free: 1800-258-7170 (IVR: 1-1-7 or 2-1-7)\nWorking Hours: Monday to Friday, 9:00 AM – 6:00 PM\n\nThank you for your time and patience.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\n\nHP Privacy: www.hp.com/privacy |\nDisclaimer: http://www.hp.com/support/emaildisclaimers` },
 ];
-
 /* Build template grid */
 const grid = document.getElementById('templateGrid');
 const textarea = document.getElementById('emailTextArea');
-
 emailTemplates.forEach(tpl => {
   const btn = document.createElement('button');
   btn.className = 'tpl-btn';
@@ -1161,7 +1185,6 @@ function selectTemplate(id, title, content) {
   activeTemplateId = id;
   document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tpl-' + id).classList.add('active');
-  
   // Check if current agent has a customized version of this template saved
   let savedCustomTemplates = {};
   try {
@@ -1184,7 +1207,6 @@ function selectTemplate(id, title, content) {
 textarea.addEventListener('input', () => {
   document.getElementById('charCounter').textContent = textarea.value.length + ' chars';
 });
-
 function saveCustomTemplate() {
   if (!activeTemplateId) {
      toast('⚠️ No template selected to save.', 'var(--amber)');
@@ -1215,7 +1237,6 @@ function revertCustomTemplate() {
    // Delete custom template and resave
    delete savedCustomTemplates[activeTemplateId];
    localStorage.setItem('acs_custom_templates_' + loggedInUser, JSON.stringify(savedCustomTemplates));
-
    // Reload the default template text
    const originalTpl = emailTemplates.find(t => t.id === activeTemplateId);
    if (originalTpl) {
@@ -1331,7 +1352,7 @@ function processExcelFile(file) {
       populateOwnerDropdown(); renderCaseTable();
       toast('✅ File loaded — statuses restored from local cache!', 'var(--green)');
     } catch(err) { console.error(err);
-      toast('❌ Parse error. Please use a valid .xlsx/.xls/.csv file.', 'var(--red)'); }
+    toast('❌ Parse error. Please use a valid .xlsx/.xls/.csv file.', 'var(--red)'); }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -1371,7 +1392,8 @@ function updateStatus(idx, val) {
   const row = globalRawJsonData[idx];
   if (row) {
     let db = {};
-    try { db = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
+    try { db = JSON.parse(localStorage.getItem('acs_persistent_db')) || {};
+    } catch(e){}
     db[rowSig(row)] = { statusValue: val, savedTimestamp: Date.now() };
     localStorage.setItem('acs_persistent_db', JSON.stringify(db));
   }
@@ -1503,6 +1525,7 @@ const goldenAccountsRawData = [
   {"Zone CS":"South","Account Name":"WIPRO LIMITED - IN","ADM/ VRM Name":"T R Anand Kumar","FY26 GTM":"India Inc/PSU"},
   {"Zone CS":"North","Account Name":"ZOMATO - IN","ADM/ VRM Name":"Nitin Tyagi","FY26 GTM":"India Inc/PSU"}
 ];
+
 function initGoldenTable() {
   const table = document.getElementById('goldenDataTable');
   const headers = Object.keys(goldenAccountsRawData[0]);
@@ -1541,7 +1564,6 @@ function applyGoldenFilters() {
    ADM ACCOUNT LIST — with IndexedDB persistence
 ════════════════════════════════════════════════ */
 let admRawData = [], admPendingFile = null;
-/* ── Save ADM data into IndexedDB ── */
 function saveAdmToIndexedDB(data, sheetName, timestamp) {
   if (!dbInstance) return;
   const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
@@ -1549,7 +1571,6 @@ function saveAdmToIndexedDB(data, sheetName, timestamp) {
   st.put({ rows: data, sheetName, savedAt: timestamp }, 'adm_data');
 }
 
-/* ── Load ADM data from IndexedDB on boot ── */
 function loadAdmFromIndexedDB() {
   return new Promise((resolve) => {
     if (!dbInstance) { resolve(null); return; }
@@ -1560,19 +1581,16 @@ function loadAdmFromIndexedDB() {
   });
 }
 
-/* ── Delete ADM data from IndexedDB ── */
 function deleteAdmFromIndexedDB() {
   if (!dbInstance) return;
   const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
   tx.objectStore(STORE_NAME).delete('adm_data');
 }
 
-/* ── Paint the ADM table from an in-memory array ── */
 function paintAdmTable(data, sheetName, savedAt) {
   admRawData = data;
   const table = document.getElementById('admDataTable');
   
-  // Set the new headers
   const headers = ['Subsidiary Legal Name', 'ADM Name', 'ADM/VRM'];
   let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
   data.forEach(row => {
@@ -1589,7 +1607,6 @@ function paintAdmTable(data, sheetName, savedAt) {
   document.getElementById('valAdmSheetName').textContent = sheetName;
   document.getElementById('admStats').classList.remove('hidden');
   document.getElementById('admTablePanel').classList.remove('hidden');
-  // Show the persistent-save banner with timestamp
   const label = savedAt
     ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
     : 'Last updated: just now';
@@ -1609,14 +1626,12 @@ function validateAndProcessAdmFile(file) {
   toast('✅ File accepted — click "Update ADM List" to save.', 'var(--green)');
 }
 
-/* ── Extract Data from "AccountList" Sheet ── */
 function renderAdmTable() {
   if (!admPendingFile) return;
   const reader = new FileReader();
   reader.onload = e => {
     try {
       const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      // Target explicitly the "AccountList" sheet (case-insensitive check to be safe)
       const targetSheetName = wb.SheetNames.find(name => name.replace(/\s+/g, '').toLowerCase() === 'accountlist');
       if (!targetSheetName) {
         toast('⚠️ "AccountList" sheet not found in the workbook.', 'var(--amber)');
@@ -1632,8 +1647,6 @@ function renderAdmTable() {
 
       const parsed = allRows.map(row => {
         const keys = Object.keys(row);
-        
-        // Flexible key matching to handle spacing or underscore variations in column headers
         const companyKey = keys.find(k => k.trim().toLowerCase() === 'subsidiary_legal_name' || k.trim().toLowerCase() === 'subsidiary legal name');
         const admNameKey = keys.find(k => k.trim().toLowerCase() === 'adm name' || k.trim().toLowerCase() === 'adm_name');
         const admVrmKey  = keys.find(k => k.trim().toLowerCase().includes('adm/vrm') || k.trim().toLowerCase().includes('adm/ vrm'));
@@ -1644,7 +1657,6 @@ function renderAdmTable() {
           "ADM/VRM": admVrmKey ? row[admVrmKey] : ''
         };
       }).filter(r => r["Subsidiary Legal Name"] !== '' || r["ADM Name"] !== '' || r["ADM/VRM"] !== '');
-      // Filter out completely empty rows
 
       if (!parsed.length) {
         toast(`⚠️ No matching columns found on sheet "${targetSheetName}".`, 'var(--amber)');
@@ -1663,7 +1675,6 @@ function renderAdmTable() {
   reader.readAsArrayBuffer(admPendingFile);
 }
 
-/* ── Clear saved ADM data ── */
 function clearAdmData() {
   if (!confirm('Remove the saved ADM list from local storage? You will need to re-upload the file.')) return;
   deleteAdmFromIndexedDB();
@@ -1811,6 +1822,159 @@ pinDZ.addEventListener('dragleave', () => pinDZ.classList.remove('drag-over'));
 pinDZ.addEventListener('drop', e => {
   e.preventDefault(); pinDZ.classList.remove('drag-over');
   const f = e.dataTransfer.files[0]; if (f) validateAndProcessPinFile(f);
+});
+
+/* ════════════════════════════════════════════════
+   PML LIST — (NEW MODULE)
+════════════════════════════════════════════════ */
+let pmlRawData = [], pmlPendingFile = null;
+
+function savePmlToIndexedDB(data, timestamp) {
+  if (!dbInstance) return;
+  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
+  const st = tx.objectStore(STORE_NAME);
+  st.put({ rows: data, savedAt: timestamp }, 'pml_data');
+}
+
+function loadPmlFromIndexedDB() {
+  return new Promise((resolve) => {
+    if (!dbInstance) { resolve(null); return; }
+    const tx = dbInstance.transaction([STORE_NAME], 'readonly');
+    const req = tx.objectStore(STORE_NAME).get('pml_data');
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror   = () => resolve(null);
+  });
+}
+
+function deletePmlFromIndexedDB() {
+  if (!dbInstance) return;
+  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
+  tx.objectStore(STORE_NAME).delete('pml_data');
+}
+
+function paintPmlTable(data, savedAt) {
+  pmlRawData = data;
+  const table = document.getElementById('pmlDataTable');
+  
+  const headers = ['Region', 'CDAX ID/Queue', 'State', 'City', 'Partner Account Manager', 'Service Delivery Coordinator'];
+  let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
+  
+  data.forEach(row => {
+    h += `<tr>`;
+    headers.forEach(c => {
+      let val = row[c] || '-';
+      if ((c === 'Partner Account Manager' || c === 'Service Delivery Coordinator') && val !== '-') {
+          // Wrap in a mailto link
+          val = `<a href="mailto:${val}" style="color:var(--cyan); text-decoration:none; font-weight:600;">✉️ ${val}</a>`;
+      }
+      h += `<td>${val}</td>`;
+    });
+    h += `</tr>`;
+  });
+  
+  h += '</tbody>';
+  table.innerHTML = h;
+
+  document.getElementById('valTotalPmlRows').textContent = data.length;
+  document.getElementById('valFilteredPmlRows').textContent = data.length;
+  document.getElementById('pmlStats').classList.remove('hidden');
+  document.getElementById('pmlTablePanel').classList.remove('hidden');
+  
+  const label = savedAt
+    ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
+    : 'Last updated: just now';
+  document.getElementById('pmlSavedLabel').textContent = label;
+  document.getElementById('pmlSavedBanner').classList.remove('hidden');
+}
+
+function validateAndProcessPmlFile(file) {
+  if (!file) return;
+  const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (!name.includes('pml')) {
+    toast('❌ Rejected: filename must contain "PML"', 'var(--red)');
+    document.getElementById('pmlFileInput').value = ''; return;
+  }
+  pmlPendingFile = file;
+  document.getElementById('pmlUpdateRow').classList.remove('hidden');
+  toast('✅ PML File accepted — click "Update PML List" to save.', 'var(--green)');
+}
+
+function renderPmlTable() {
+  if (!pmlPendingFile) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const sheetName = wb.SheetNames[0]; 
+      const ws = wb.Sheets[sheetName];
+      const allRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+      
+      if (!allRows.length) {
+        toast(`⚠️ Sheet is empty.`, 'var(--amber)');
+        return;
+      }
+
+      const parsed = allRows.map(row => {
+        const keys = Object.keys(row);
+        const getVal = (searchStrs) => {
+            const key = keys.find(k => searchStrs.some(s => k.toLowerCase().includes(s)));
+            return key ? row[key] : '';
+        };
+
+        return {
+          'Region': getVal(['region']),
+          'CDAX ID/Queue': getVal(['cdax', 'queue']),
+          'State': getVal(['state']),
+          'City': getVal(['city']),
+          'Partner Account Manager': getVal(['partner account manager', 'pam']),
+          'Service Delivery Coordinator': getVal(['service delivery coordinator', 'sdc'])
+        };
+      }).filter(r => r['Region'] || r['CDAX ID/Queue'] || r['Partner Account Manager']); 
+
+      const savedAt = Date.now();
+      savePmlToIndexedDB(parsed, savedAt);
+      paintPmlTable(parsed, savedAt);
+      toast(`💾 PML list saved — ${parsed.length} entries loaded`, 'var(--green)');
+    } catch (err) {
+      console.error(err);
+      toast('❌ File parse error. Ensure it is a valid spreadsheet.', 'var(--red)');
+    }
+  };
+  reader.readAsArrayBuffer(pmlPendingFile);
+}
+
+function clearPmlData() {
+  if (!confirm('Remove the saved PML List from local storage? You will need to re-upload the file.')) return;
+  deletePmlFromIndexedDB();
+  pmlRawData = [];
+  pmlPendingFile = null;
+  document.getElementById('pmlDataTable').innerHTML = '';
+  document.getElementById('pmlStats').classList.add('hidden');
+  document.getElementById('pmlTablePanel').classList.add('hidden');
+  document.getElementById('pmlSavedBanner').classList.add('hidden');
+  document.getElementById('pmlUpdateRow').classList.add('hidden');
+  document.getElementById('pmlFileInput').value = '';
+  toast('🗑 PML data cleared from local storage.', 'var(--amber)');
+}
+
+function applyPmlFilters() {
+    const q = document.getElementById('pmlSearchBox').value.toLowerCase().trim();
+    let n = 0;
+    document.querySelectorAll('#pmlDataTable tbody tr').forEach((row, i) => {
+      const text = Object.values(pmlRawData[i]).join(' ').toLowerCase();
+      const show = !q || text.includes(q);
+      row.style.display = show ? '' : 'none';
+      if (show) n++;
+    });
+    document.getElementById('valFilteredPmlRows').textContent = n;
+}
+
+const pmlDZ = document.getElementById('pmlDropZone');
+pmlDZ.addEventListener('dragover', e => { e.preventDefault(); pmlDZ.classList.add('drag-over'); });
+pmlDZ.addEventListener('dragleave', () => pmlDZ.classList.remove('drag-over'));
+pmlDZ.addEventListener('drop', e => {
+  e.preventDefault(); pmlDZ.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0]; if (f) validateAndProcessPmlFile(f);
 });
 
 /* ════════════════════════════════════════════════
@@ -2010,6 +2174,15 @@ window.addEventListener('DOMContentLoaded', async () => {
       toast('🔄 PIN list restored from last saved session.', 'var(--purple)');
     }
   } catch(e) { console.log('No prior PIN cache.', e); }
+
+  // Restore PML list 
+  try {
+    const savedPml = await loadPmlFromIndexedDB();
+    if (savedPml && savedPml.rows && savedPml.rows.length > 0) {
+      paintPmlTable(savedPml.rows, savedPml.savedAt);
+      toast('🔄 PML list restored from last saved session.', 'var(--purple)');
+    }
+  } catch(e) { console.log('No prior PML cache.', e); }
 
   // Restore Advisories List
   try {
