@@ -440,8 +440,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 }
 .panel-title::after {
   content: '';
-  flex: 1; height: 1px;
-  background: var(--border);
+  flex: 1; height: 1px; background: var(--border);
 }
 
 /* ═══════════════════════════ TWO-COL LAYOUT ═══════════════════════════ */
@@ -649,13 +648,15 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 /* ═══════════════════════════ TOAST ═══════════════════════════ */
 #toast {
   position: fixed;
-  bottom: 28px; right: 28px;
+  bottom: 28px;
+  right: 28px;
   background: var(--surface2);
   border: 1px solid var(--border-bright);
   border-left: 3px solid var(--cyan);
   padding: 14px 20px;
   border-radius: var(--radius-sm);
-  font-size: 0.85rem; font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 500;
   color: var(--text);
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
   opacity: 0;
@@ -683,7 +684,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .adv-body { padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; background: var(--surface); }
 .adv-body.open { padding: 18px; max-height: 2000px; overflow-y: auto; border-top: 1px solid var(--border); }
 .adv-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-.adv-table td, .adv-table th { padding: 8px 12px; border: 1px solid var(--border); color: var(--text2); }
+.adv-table td, .adv-table th { padding: 8px 12px; border: 1px solid var(--border); color: var(--text2); vertical-align: top; }
 .adv-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
 .adv-img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
 
@@ -863,7 +864,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
             <div class="section-title">Case Data</div>
             <button class="btn btn-success btn-sm" onclick="exportMyFilteredData()">
               <span>📤</span> Export Filtered
-             </button>
+            </button>
           </div>
           <div class="filter-row">
             <select class="filter-select" id="ownerFilterDropdown" onchange="applyFiltersAndMetrics()">
@@ -888,7 +889,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
             <input type="text" class="filter-input" id="goldenSearchBox" onkeyup="applyGoldenFilters()" placeholder="🔍 Search accounts, managers, zones..." style="max-width:320px;min-width:0">
           </div>
           <div class="table-wrap">
-             <table class="data-table" id="goldenDataTable"></table>
+            <table class="data-table" id="goldenDataTable"></table>
           </div>
         </div>
       </div>
@@ -1005,7 +1006,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
         </div>
 
         <div id="advSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
-           <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="advSavedLabel">Last updated: —</span></span>
+          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="advSavedLabel">Last updated: —</span></span>
           <button class="btn btn-danger-ghost btn-sm" onclick="clearAdvData()">🗑 Clear Saved Data</button>
         </div>
 
@@ -1020,6 +1021,50 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
           </div>
           <div id="advAccordionContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
+
+        <div class="panel hidden" id="manualAdvListPanel">
+          <div class="section-header">
+            <div class="section-title">Custom Advisories Directory</div>
+            <button class="btn btn-danger-ghost btn-sm" onclick="clearManualAdvData()">🗑 Clear Custom</button>
+          </div>
+          <div id="manualAdvAccordionContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+
+        <div class="panel">
+          <div class="section-header">
+            <div class="section-title">Add New Advisory</div>
+          </div>
+          <div class="two-col" style="margin-bottom:16px;">
+            <div class="login-field" style="margin-bottom:0;">
+              <label>Advisory Number / Name *</label>
+              <input type="text" id="manualAdvName" placeholder="e.g. ADV-2024-001" class="filter-input" style="width:100%">
+            </div>
+            <div class="login-field" style="margin-bottom:0;">
+              <label>Affected Devices</label>
+              <input type="text" id="manualAdvDevices" placeholder="e.g. HP ProBook 450 G8" class="filter-input" style="width:100%">
+            </div>
+          </div>
+          <div class="login-field">
+            <label>Issue Details *</label>
+            <textarea id="manualAdvIssue" class="filter-input" style="width:100%; height:80px; resize:vertical; font-family:var(--font);" placeholder="Describe the issue..."></textarea>
+          </div>
+          <div class="login-field">
+            <label>Troubleshooting Steps</label>
+            <textarea id="manualAdvTS" class="filter-input" style="width:100%; height:80px; resize:vertical; font-family:var(--font);" placeholder="Troubleshooting steps..."></textarea>
+          </div>
+          <div class="login-field">
+            <label>Fixes / Resolution</label>
+            <textarea id="manualAdvFix" class="filter-input" style="width:100%; height:80px; resize:vertical; font-family:var(--font);" placeholder="How to fix the issue..."></textarea>
+          </div>
+          <div class="login-field">
+            <label>Attach File / Image (Optional)</label>
+            <input type="file" id="manualAdvFile" class="filter-input" style="width:100%; padding: 10px;">
+          </div>
+          <div class="action-row">
+            <button class="btn btn-success" onclick="saveManualAdvisory()">➕ Add Advisory</button>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -1168,6 +1213,7 @@ const emailTemplates = [
   { id:"closure_resolved", title:"Case Closure / Resolved", icon:"✅", content:`Hello Sir,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nAs per your explicit confirmation, the reported device issue is fully resolved.\nWe are proceeding to log case closure.\nIf any subsequent issues surface, please contact our technical support toll-free line anytime.\n\nFor concerns or feedback: kavya.bs@hp.com\n\nOnce again, thank you for contacting HP.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170` },
   { id:"closure_rr", title:"Closure For RR (No Contact)", icon:"🔒", content:`Hello Sir,\nGreetings from HP!\n\nMy name is [Agent Name], and I am from the HP Technical Support Team.\n\nWe tried reaching you but were unable to connect.\nAs we have not heard back, we will proceed to close your case (Case ID: [Case ID]), assuming the issue has been resolved.\n\nIf you still need assistance, please contact us:\nToll-free: 1800-258-7170 (IVR: 1-1-7 or 2-1-7)\nWorking Hours: Monday to Friday, 9:00 AM – 6:00 PM\n\nThank you for your time and patience.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\n\nHP Privacy: www.hp.com/privacy |\nDisclaimer: http://www.hp.com/support/emaildisclaimers` },
 ];
+
 /* Build template grid */
 const grid = document.getElementById('templateGrid');
 const textarea = document.getElementById('emailTextArea');
@@ -1185,6 +1231,7 @@ function selectTemplate(id, title, content) {
   activeTemplateId = id;
   document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tpl-' + id).classList.add('active');
+
   // Check if current agent has a customized version of this template saved
   let savedCustomTemplates = {};
   try {
@@ -1207,6 +1254,7 @@ function selectTemplate(id, title, content) {
 textarea.addEventListener('input', () => {
   document.getElementById('charCounter').textContent = textarea.value.length + ' chars';
 });
+
 function saveCustomTemplate() {
   if (!activeTemplateId) {
      toast('⚠️ No template selected to save.', 'var(--amber)');
@@ -1237,6 +1285,7 @@ function revertCustomTemplate() {
    // Delete custom template and resave
    delete savedCustomTemplates[activeTemplateId];
    localStorage.setItem('acs_custom_templates_' + loggedInUser, JSON.stringify(savedCustomTemplates));
+
    // Reload the default template text
    const originalTpl = emailTemplates.find(t => t.id === activeTemplateId);
    if (originalTpl) {
@@ -1351,8 +1400,7 @@ function processExcelFile(file) {
       saveToIndexedDB(globalDataHeaders, globalRawJsonData);
       populateOwnerDropdown(); renderCaseTable();
       toast('✅ File loaded — statuses restored from local cache!', 'var(--green)');
-    } catch(err) { console.error(err);
-    toast('❌ Parse error. Please use a valid .xlsx/.xls/.csv file.', 'var(--red)'); }
+    } catch(err) { console.error(err); toast('❌ Parse error. Please use a valid .xlsx/.xls/.csv file.', 'var(--red)'); }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -1392,8 +1440,7 @@ function updateStatus(idx, val) {
   const row = globalRawJsonData[idx];
   if (row) {
     let db = {};
-    try { db = JSON.parse(localStorage.getItem('acs_persistent_db')) || {};
-    } catch(e){}
+    try { db = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
     db[rowSig(row)] = { statusValue: val, savedTimestamp: Date.now() };
     localStorage.setItem('acs_persistent_db', JSON.stringify(db));
   }
@@ -1525,7 +1572,6 @@ const goldenAccountsRawData = [
   {"Zone CS":"South","Account Name":"WIPRO LIMITED - IN","ADM/ VRM Name":"T R Anand Kumar","FY26 GTM":"India Inc/PSU"},
   {"Zone CS":"North","Account Name":"ZOMATO - IN","ADM/ VRM Name":"Nitin Tyagi","FY26 GTM":"India Inc/PSU"}
 ];
-
 function initGoldenTable() {
   const table = document.getElementById('goldenDataTable');
   const headers = Object.keys(goldenAccountsRawData[0]);
@@ -1590,7 +1636,6 @@ function deleteAdmFromIndexedDB() {
 function paintAdmTable(data, sheetName, savedAt) {
   admRawData = data;
   const table = document.getElementById('admDataTable');
-  
   const headers = ['Subsidiary Legal Name', 'ADM Name', 'ADM/VRM'];
   let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
   data.forEach(row => {
@@ -1657,7 +1702,6 @@ function renderAdmTable() {
           "ADM/VRM": admVrmKey ? row[admVrmKey] : ''
         };
       }).filter(r => r["Subsidiary Legal Name"] !== '' || r["ADM Name"] !== '' || r["ADM/VRM"] !== '');
-
       if (!parsed.length) {
         toast(`⚠️ No matching columns found on sheet "${targetSheetName}".`, 'var(--amber)');
         return;
@@ -1828,7 +1872,6 @@ pinDZ.addEventListener('drop', e => {
    PML LIST — (NEW MODULE)
 ════════════════════════════════════════════════ */
 let pmlRawData = [], pmlPendingFile = null;
-
 function savePmlToIndexedDB(data, timestamp) {
   if (!dbInstance) return;
   const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
@@ -1855,10 +1898,8 @@ function deletePmlFromIndexedDB() {
 function paintPmlTable(data, savedAt) {
   pmlRawData = data;
   const table = document.getElementById('pmlDataTable');
-  
   const headers = ['Region', 'CDAX ID/Queue', 'State', 'City', 'Partner Account Manager', 'Service Delivery Coordinator'];
   let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
-  
   data.forEach(row => {
     h += `<tr>`;
     headers.forEach(c => {
@@ -1869,6 +1910,7 @@ function paintPmlTable(data, savedAt) {
       }
       h += `<td>${val}</td>`;
     });
+   
     h += `</tr>`;
   });
   
@@ -1879,7 +1921,6 @@ function paintPmlTable(data, savedAt) {
   document.getElementById('valFilteredPmlRows').textContent = data.length;
   document.getElementById('pmlStats').classList.remove('hidden');
   document.getElementById('pmlTablePanel').classList.remove('hidden');
-  
   const label = savedAt
     ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
     : 'Last updated: just now';
@@ -1908,7 +1949,6 @@ function renderPmlTable() {
       const sheetName = wb.SheetNames[0]; 
       const ws = wb.Sheets[sheetName];
       const allRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-      
       if (!allRows.length) {
         toast(`⚠️ Sheet is empty.`, 'var(--amber)');
         return;
@@ -1929,8 +1969,7 @@ function renderPmlTable() {
           'Partner Account Manager': getVal(['partner account manager', 'pam']),
           'Service Delivery Coordinator': getVal(['service delivery coordinator', 'sdc'])
         };
-      }).filter(r => r['Region'] || r['CDAX ID/Queue'] || r['Partner Account Manager']); 
-
+      }).filter(r => r['Region'] || r['CDAX ID/Queue'] || r['Partner Account Manager']);
       const savedAt = Date.now();
       savePmlToIndexedDB(parsed, savedAt);
       paintPmlTable(parsed, savedAt);
@@ -1978,9 +2017,11 @@ pmlDZ.addEventListener('drop', e => {
 });
 
 /* ════════════════════════════════════════════════
-   KNOWN ADVISORIES — (NEW MODULE)
+   KNOWN ADVISORIES — PLUS MANUAL UPLOADS
 ════════════════════════════════════════════════ */
 let advRawData = [], advPendingFile = null;
+let manualAdvisories = [];
+
 function saveAdvToIndexedDB(data, timestamp) {
   if (!dbInstance) return;
   const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
@@ -2001,6 +2042,24 @@ function deleteAdvFromIndexedDB() {
   dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('adv_data');
 }
 
+/* ── Custom/Manual Advisories DB ── */
+function saveManualAdvToIndexedDB(data) {
+  if (!dbInstance) return;
+  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).put({ advisories: data }, 'manual_adv_data');
+}
+function loadManualAdvFromIndexedDB() {
+  return new Promise((resolve) => {
+    if (!dbInstance) { resolve(null); return; }
+    const req = dbInstance.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME).get('manual_adv_data');
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror   = () => resolve(null);
+  });
+}
+function deleteManualAdvFromIndexedDB() {
+  if (!dbInstance) return;
+  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('manual_adv_data');
+}
+
 /* ── UI Logic for Accordion ── */
 function toggleAdv(element) {
   const body = element.nextElementSibling;
@@ -2010,7 +2069,6 @@ function toggleAdv(element) {
 /* ── Basic Image URL renderer ── */
 function renderImageLinks(text) {
   if (typeof text !== 'string') return text;
-  // Match standard image URLs to automatically display them as images within the table cells
   const imgRegex = /(https?:\/\/[^\s]+?\.(?:png|jpg|jpeg|gif|webp))/gi;
   if (imgRegex.test(text)) {
       return text.replace(imgRegex, '<br><img src="$1" class="adv-img" onerror="this.style.display=\'none\'"><br>');
@@ -2127,10 +2185,106 @@ function clearAdvData() {
   toast('🗑 Advisories data cleared.', 'var(--amber)');
 }
 
+/* ─── Manual Advisories Logic ─── */
+async function saveManualAdvisory() {
+  const name = document.getElementById('manualAdvName').value.trim();
+  const devices = document.getElementById('manualAdvDevices').value.trim();
+  const issue = document.getElementById('manualAdvIssue').value.trim();
+  const ts = document.getElementById('manualAdvTS').value.trim();
+  const fix = document.getElementById('manualAdvFix').value.trim();
+  const fileInput = document.getElementById('manualAdvFile');
+
+  if (!name || !issue) {
+    toast('⚠️ Advisory Number and Issue Details are required.', 'var(--amber)');
+    return;
+  }
+
+  let fileData = null;
+  if (fileInput.files && fileInput.files[0]) {
+     const file = fileInput.files[0];
+     fileData = await new Promise((resolve) => {
+         const reader = new FileReader();
+         reader.onload = e => resolve(e.target.result);
+         reader.readAsDataURL(file);
+     });
+  }
+
+  const newAdv = {
+    id: Date.now(),
+    name, devices, issue, ts, fix, fileData
+  };
+
+  manualAdvisories.push(newAdv);
+  saveManualAdvToIndexedDB(manualAdvisories);
+  paintManualAdvList();
+
+  // Reset form
+  document.getElementById('manualAdvName').value = '';
+  document.getElementById('manualAdvDevices').value = '';
+  document.getElementById('manualAdvIssue').value = '';
+  document.getElementById('manualAdvTS').value = '';
+  document.getElementById('manualAdvFix').value = '';
+  document.getElementById('manualAdvFile').value = '';
+
+  toast('✅ Custom Advisory Added!', 'var(--green)');
+}
+
+function paintManualAdvList() {
+  const container = document.getElementById('manualAdvAccordionContainer');
+  const panel = document.getElementById('manualAdvListPanel');
+
+  if (!manualAdvisories.length) {
+     panel.classList.add('hidden');
+     container.innerHTML = '';
+     return;
+  }
+
+  panel.classList.remove('hidden');
+  let html = '';
+  manualAdvisories.forEach(adv => {
+     html += `
+     <div class="adv-item" data-name="${adv.name.replace(/"/g, '&quot;').toLowerCase()}">
+       <div class="adv-header" onclick="toggleAdv(this)">
+         <span>📌 ${adv.name}</span>
+         <span style="font-size:0.8rem; color:var(--text3)">Custom Entry</span>
+       </div>
+       <div class="adv-body">
+         <table class="adv-table">
+           <tbody>
+             <tr><td style="font-weight:bold; width:180px;">Affected Devices</td><td>${adv.devices || 'N/A'}</td></tr>
+             <tr><td style="font-weight:bold;">Issue Details</td><td>${adv.issue.replace(/\n/g, '<br>')}</td></tr>
+             <tr><td style="font-weight:bold;">Troubleshooting</td><td>${adv.ts ? adv.ts.replace(/\n/g, '<br>') : '-'}</td></tr>
+             <tr><td style="font-weight:bold;">Fixes / Resolution</td><td>${adv.fix ? adv.fix.replace(/\n/g, '<br>') : '-'}</td></tr>
+             ${adv.fileData ? `<tr><td style="font-weight:bold;">Attachment</td><td><img src="${adv.fileData}" style="max-width:100%; border-radius:4px; margin-top:8px;" alt="Attachment" onerror="this.outerHTML='<a href=&quot;${adv.fileData}&quot; target=&quot;_blank&quot; style=&quot;color:var(--cyan)&quot;>Download Attachment</a>'"></td></tr>` : ''}
+           </tbody>
+         </table>
+         <button class="btn btn-danger-ghost btn-sm" style="margin-top:12px; margin-bottom:12px;" onclick="removeManualAdvisory(${adv.id})">🗑 Delete Custom Advisory</button>
+       </div>
+     </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function removeManualAdvisory(id) {
+   if (!confirm('Delete this custom advisory?')) return;
+   manualAdvisories = manualAdvisories.filter(a => a.id !== id);
+   saveManualAdvToIndexedDB(manualAdvisories);
+   paintManualAdvList();
+   toast('🗑 Custom advisory deleted.', 'var(--amber)');
+}
+
+function clearManualAdvData() {
+   if (!confirm('Clear all custom advisories?')) return;
+   manualAdvisories = [];
+   deleteManualAdvFromIndexedDB();
+   paintManualAdvList();
+   toast('🗑 All custom advisories cleared.', 'var(--amber)');
+}
+
 function applyAdvFilters() {
   const q = document.getElementById('advSearchBox').value.toLowerCase().trim();
   document.querySelectorAll('.adv-item').forEach(item => {
-    // Search within the name dataset tag or the entire text content of the element
+    // Search within the name dataset tag or the entire text content of the element (covers both DB and Manual ones seamlessly)
     const textContent = item.textContent.toLowerCase();
     if (!q || textContent.includes(q)) {
         item.style.display = '';
@@ -2192,6 +2346,15 @@ window.addEventListener('DOMContentLoaded', async () => {
       toast('🔄 Advisories restored from last saved session.', 'var(--purple)');
     }
   } catch(e) { console.log('No prior Adv cache.', e); }
+
+  // Restore Custom/Manual Advisories
+  try {
+    const savedManualAdv = await loadManualAdvFromIndexedDB();
+    if (savedManualAdv && savedManualAdv.advisories && savedManualAdv.advisories.length > 0) {
+      manualAdvisories = savedManualAdv.advisories;
+      paintManualAdvList();
+    }
+  } catch(e) { console.log('No prior Custom Adv cache.', e); }
 
 });
 </script>
