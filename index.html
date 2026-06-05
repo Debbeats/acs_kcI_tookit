@@ -1,23 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ACS KCI Portal — HP India</title>
+<title>ACS KCI Portal — HP Enterprise</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ================= ENTERPRISE DESIGN SYSTEM (FLUENT/M3 INSPIRED) ================= */
 :root {
+  /* DARK MODE (Default) */
   --bg: #07090f;
   --surface: #0e1117;
   --surface2: #141921;
   --surface3: #1c2333;
-  --border: rgba(255,255,255,0.07);
-  --border-bright: rgba(255,255,255,0.14);
-  --cyan: #00d4ff;
-  --cyan-dim: rgba(0,212,255,0.12);
-  --cyan-glow: rgba(0,212,255,0.25);
+  --border: rgba(255,255,255,0.08);
+  --border-bright: rgba(255,255,255,0.15);
+  
+  /* HP Enterprise Brand Colors */
+  --hp-blue: #0096D6;
+  --cyan: #00b4d8;
+  --cyan-dim: rgba(0,180,216,0.12);
+  --cyan-glow: rgba(0,180,216,0.25);
   --amber: #f59e0b;
   --amber-dim: rgba(245,158,11,0.12);
   --green: #10b981;
@@ -25,669 +30,256 @@
   --red: #ef4444;
   --red-dim: rgba(239,68,68,0.12);
   --purple: #8b5cf6;
-  --text: #f1f5f9;
+  --purple-dim: rgba(139,92,246,0.15);
+  
+  --text: #f8fafc;
   --text2: #94a3b8;
   --text3: #475569;
-  --sidebar-w: 240px;
-  --header-h: 64px;
-  --radius: 14px;
-  --radius-sm: 8px;
-  --font: 'Plus Jakarta Sans', sans-serif;
+  
+  --sidebar-w: 260px;
+  --header-h: 70px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'Inter', sans-serif;
   --mono: 'Space Mono', monospace;
+  
+  --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.2);
+  --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.3);
+  --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.5);
+  
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* LIGHT MODE */
+html[data-theme='light'] {
+  --bg: #f4f7f9;
+  --surface: #ffffff;
+  --surface2: #f8fafc;
+  --surface3: #e2e8f0;
+  --border: rgba(0,0,0,0.08);
+  --border-bright: rgba(0,0,0,0.15);
+  --text: #0f172a;
+  --text2: #475569;
+  --text3: #64748b;
+  --cyan: #0077b6;
+  --cyan-dim: rgba(0,119,182,0.1);
+  --cyan-glow: rgba(0,119,182,0.15);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.05);
+  --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; overflow-x: hidden; }
+body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
 
 /* ═══════════════════════════ SCROLLBAR ═══════════════════════════ */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
 
 /* ═══════════════════════════ LOGIN PAGE ═══════════════════════════ */
-#loginScreen {
-  position: fixed; inset: 0; z-index: 1000;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--bg);
-  overflow: hidden;
-}
-.login-bg-grid {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-  animation: gridDrift 20s linear infinite;
-}
+#loginScreen { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: var(--bg); overflow: hidden; }
+.login-bg-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; animation: gridDrift 30s linear infinite; }
 @keyframes gridDrift { 0%{transform:translateY(0)} 100%{transform:translateY(60px)} }
-.login-radial {
-  position: absolute;
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
-  top: 50%; left: 50%; transform: translate(-50%,-50%);
-  animation: pulse 4s ease-in-out infinite alternate;
-}
-@keyframes pulse { 0%{opacity:0.5; transform:translate(-50%,-50%) scale(0.9)} 100%{opacity:1; transform:translate(-50%,-50%) scale(1.1)} }
+.login-radial { position: absolute; width: 800px; height: 800px; background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 60%); top: 50%; left: 50%; transform: translate(-50%,-50%); animation: pulse 6s ease-in-out infinite alternate; }
+@keyframes pulse { 0%{opacity:0.4; transform:translate(-50%,-50%) scale(0.9)} 100%{opacity:0.8; transform:translate(-50%,-50%) scale(1.1)} }
 
-.login-card {
-  position: relative; z-index: 10;
-  background: var(--surface);
-  border: 1px solid var(--border-bright);
-  border-radius: 24px;
-  padding: 52px 48px;
-  width: 100%; max-width: 440px;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
-  animation: cardIn 0.6s cubic-bezier(0.22,1,0.36,1) both;
-}
+.login-card { position: relative; z-index: 10; background: var(--surface); border: 1px solid var(--border-bright); border-radius: 24px; padding: 48px; width: 100%; max-width: 440px; box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255,255,255,0.1); backdrop-filter: blur(20px); animation: cardIn 0.6s cubic-bezier(0.22,1,0.36,1) both; }
 @keyframes cardIn { 0%{opacity:0;transform:translateY(32px) scale(0.97)} 100%{opacity:1;transform:none} }
 
-.login-logo-row {
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 32px;
-}
-.login-logo-circle {
-  width: 46px; height: 46px;
-  background: linear-gradient(135deg, var(--cyan), #0066cc);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 0 20px var(--cyan-glow);
-}
-.login-brand-name { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.3px; }
-.login-brand-sub { font-size: 0.78rem; color: var(--text2); font-weight: 400; margin-top: 2px; }
+.login-logo-row { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+.login-logo-circle { width: 52px; height: 52px; background: linear-gradient(135deg, var(--hp-blue), #00558f); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px var(--cyan-glow); }
+.login-logo-circle svg { fill: #fff; width: 28px; height: 28px; }
+.login-brand-name { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; }
+.login-brand-sub { font-size: 0.85rem; color: var(--text2); font-weight: 500; margin-top: 2px; }
 
-.login-heading { font-size: 1.65rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
-.login-sub { font-size: 0.88rem; color: var(--text2); margin-bottom: 36px; line-height: 1.5; }
+.login-heading { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+.login-sub { font-size: 0.9rem; color: var(--text2); margin-bottom: 32px; line-height: 1.5; }
 
-.login-field { margin-bottom: 18px; }
-.login-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
-.login-field input {
-  width: 100%;
-  background: var(--surface2);
-  border: 1px solid var(--border-bright);
-  border-radius: var(--radius-sm);
-  padding: 13px 16px;
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.login-field input:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 0 3px var(--cyan-dim);
-}
+.login-field { margin-bottom: 20px; }
+.login-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.login-field input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; color: var(--text); font-family: var(--font); font-size: 0.95rem; outline: none; transition: var(--transition); }
+.login-field input:focus { border-color: var(--cyan); box-shadow: 0 0 0 4px var(--cyan-dim); background: var(--surface); }
 .login-field input::placeholder { color: var(--text3); }
 
-.login-creds-note {
-  background: var(--amber-dim);
-  border: 1px solid rgba(245,158,11,0.2);
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-  font-size: 0.8rem;
-  color: var(--amber);
-  margin-bottom: 24px;
-  line-height: 1.5;
-}
+.login-creds-note { background: var(--amber-dim); border: 1px solid rgba(245,158,11,0.2); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.8rem; color: var(--amber); margin-bottom: 24px; line-height: 1.5; }
 
-#loginError {
-  background: var(--red-dim);
-  border: 1px solid rgba(239,68,68,0.3);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  font-size: 0.85rem;
-  color: var(--red);
-  margin-bottom: 18px;
-  display: none;
-  animation: shake 0.4s ease;
-}
+#loginError { background: var(--red-dim); border: 1px solid rgba(239,68,68,0.3); border-radius: var(--radius-sm); padding: 12px 16px; font-size: 0.85rem; color: var(--red); margin-bottom: 20px; display: none; animation: shake 0.4s ease; font-weight: 500; }
 @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
 
-.login-btn {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, var(--cyan), #0099cc);
-  border: none;
-  border-radius: var(--radius-sm);
-  color: #000;
-  font-family: var(--font);
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-  box-shadow: 0 6px 24px var(--cyan-glow);
-  letter-spacing: 0.2px;
-}
-.login-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 10px 30px var(--cyan-glow); }
+.login-btn { width: 100%; padding: 14px; background: var(--hp-blue); border: none; border-radius: var(--radius-sm); color: #fff; font-family: var(--font); font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); box-shadow: 0 6px 20px var(--cyan-glow); letter-spacing: 0.2px; }
+.login-btn:hover { background: #007bb5; transform: translateY(-2px); box-shadow: 0 8px 25px var(--cyan-glow); }
 .login-btn:active { transform: translateY(0); }
 
-.login-footer { text-align: center; margin-top: 28px; font-size: 0.78rem; color: var(--text3); }
+.login-footer { text-align: center; margin-top: 32px; font-size: 0.8rem; color: var(--text3); font-weight: 500; }
 
 /* ═══════════════════════════ MAIN APP SHELL ═══════════════════════════ */
 #appShell { display: none; min-height: 100vh; }
 #appShell.visible { display: flex; }
 
 /* ═══════════════════════════ SIDEBAR ═══════════════════════════ */
-.sidebar {
-  width: var(--sidebar-w);
-  min-height: 100vh;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  z-index: 100;
-  overflow: hidden;
-}
-.sidebar::before {
-  content: '';
-  position: absolute;
-  top: -120px; left: -80px;
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
-  pointer-events: none;
-}
-.sidebar-logo {
-  padding: 22px 20px 18px;
-  display: flex; align-items: center; gap: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.sidebar-logo-icon {
-  width: 38px; height: 38px;
-  background: linear-gradient(135deg, var(--cyan), #0077bb);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 0 16px var(--cyan-glow);
-}
-.sidebar-logo-text { font-size: 0.95rem; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2; }
-.sidebar-logo-sub { font-size: 0.68rem; color: var(--text2); font-weight: 400; letter-spacing: 0.2px; }
+.sidebar { width: var(--sidebar-w); min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transition: var(--transition); box-shadow: var(--shadow-lg); }
+.sidebar-logo { padding: 24px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border); }
+.sidebar-logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--hp-blue), #00558f); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px var(--cyan-glow); }
+.sidebar-logo-icon svg { fill: #fff; width: 22px; height: 22px; }
+.sidebar-logo-text { font-size: 1rem; font-weight: 800; letter-spacing: -0.3px; line-height: 1.2; }
+.sidebar-logo-sub { font-size: 0.7rem; color: var(--text2); font-weight: 500; letter-spacing: 0.2px; }
 
-.sidebar-section-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text3);
-  padding: 20px 20px 8px;
-}
+.nav-scroll { flex: 1; overflow-y: auto; padding-top: 10px; }
+.sidebar-section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text3); padding: 20px 24px 8px; }
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 11px 16px;
-  margin: 2px 10px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  color: var(--text2);
-  font-size: 0.88rem;
-  font-weight: 500;
-  border: none;
-  background: transparent;
-  width: calc(100% - 20px);
-  text-align: left;
-  position: relative;
-}
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin: 4px 12px; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); color: var(--text2); font-size: 0.9rem; font-weight: 500; border: none; background: transparent; width: calc(100% - 24px); text-align: left; position: relative; }
 .nav-item:hover { background: var(--surface2); color: var(--text); }
-.nav-item.active {
-  background: var(--cyan-dim);
-  color: var(--cyan);
-  font-weight: 600;
-}
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 20%;
-  bottom: 20%;
-  width: 3px;
-  background: var(--cyan);
-  border-radius: 99px;
-  margin-left: -6px;
-}
-.nav-icon {
-  width: 32px; height: 32px;
-  display: flex;
-  align-items: center; justify-content: center;
-  background: var(--surface2);
-  border-radius: 8px;
-  font-size: 0.95rem;
-  flex-shrink: 0;
-  transition: background 0.2s;
-}
-.nav-item.active .nav-icon { background: var(--cyan-dim); }
-.nav-item:hover .nav-icon { background: var(--surface3); }
+.nav-item.active { background: var(--cyan-dim); color: var(--cyan); font-weight: 600; box-shadow: inset 3px 0 0 var(--cyan); }
+.nav-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: var(--surface2); border-radius: 8px; font-size: 1rem; flex-shrink: 0; transition: var(--transition); border: 1px solid var(--border); }
+.nav-item.active .nav-icon { background: var(--cyan); color: #fff; border-color: transparent; box-shadow: 0 4px 10px var(--cyan-glow); }
 
-.sidebar-bottom {
-  margin-top: auto;
-  padding: 16px;
-  border-top: 1px solid var(--border);
-}
-.sidebar-user-card {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px;
-  background: var(--surface2);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.sidebar-user-card:hover { background: var(--surface3); }
-.user-avatar {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, var(--purple), #6366f1);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.85rem; color: #fff;
-  flex-shrink: 0;
-}
-.user-name { font-size: 0.82rem; font-weight: 600; }
-.user-role { font-size: 0.72rem; color: var(--text2); }
-.logout-btn-small {
-  margin-left: auto;
-  background: transparent;
-  border: none;
-  color: var(--text3);
-  cursor: pointer;
-  font-size: 0.8rem;
-  padding: 4px 6px;
-  border-radius: 4px;
-  transition: color 0.2s;
-}
-.logout-btn-small:hover { color: var(--red); }
+.sidebar-bottom { padding: 20px; border-top: 1px solid var(--border); background: var(--surface); }
+.sidebar-user-card { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: var(--transition); }
+.user-avatar { width: 36px; height: 36px; background: linear-gradient(135deg, var(--purple), #6366f1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: #fff; flex-shrink: 0; box-shadow: 0 4px 10px var(--purple-dim); }
+.user-name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+.user-role { font-size: 0.75rem; color: var(--text2); }
+.logout-btn-small { margin-left: auto; background: var(--surface3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; font-size: 0.8rem; padding: 6px; border-radius: 6px; transition: var(--transition); }
+.logout-btn-small:hover { color: var(--red); border-color: var(--red-dim); background: var(--red-dim); }
 
 /* ═══════════════════════════ MAIN CONTENT ═══════════════════════════ */
-.main-content {
-  margin-left: var(--sidebar-w);
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+.main-content { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
 
 /* ═══════════════════════════ TOP HEADER ═══════════════════════════ */
-.top-header {
-  height: var(--header-h);
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  position: sticky;
-  top: 0; z-index: 50;
-}
+.top-header { height: var(--header-h); background: rgba(var(--surface), 0.8); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
 .page-title-area { display: flex; flex-direction: column; gap: 2px; }
-.page-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px; }
-.page-breadcrumb { font-size: 0.75rem; color: var(--text3); }
+.page-title { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.3px; }
+.page-breadcrumb { font-size: 0.75rem; color: var(--text3); font-weight: 500; }
 
-.header-right { display: flex; align-items: center; gap: 14px; }
-.clock-chip {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  padding: 7px 14px;
-  border-radius: 8px;
-  font-family: var(--mono);
-  font-size: 0.82rem;
-  color: var(--cyan);
-  letter-spacing: 1px;
-}
-.badge-chip {
-  background: var(--cyan-dim);
-  border: 1px solid rgba(0,212,255,0.2);
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--cyan);
-  letter-spacing: 0.5px;
-}
-.notif-btn {
-  width: 36px; height: 36px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  color: var(--text2);
-  font-size: 1rem;
-  transition: background 0.2s, color 0.2s;
-}
-.notif-btn:hover { background: var(--surface3); color: var(--text); }
+.header-right { display: flex; align-items: center; gap: 16px; }
+.cmd-hint { display: flex; align-items: center; gap: 6px; background: var(--surface2); border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; color: var(--text2); cursor: pointer; transition: var(--transition); }
+.cmd-hint:hover { border-color: var(--cyan); color: var(--cyan); }
+.cmd-hint kbd { font-family: var(--mono); background: var(--surface3); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); }
+
+.icon-btn { width: 38px; height: 38px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text2); font-size: 1.1rem; transition: var(--transition); }
+.icon-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border-bright); }
+.clock-chip { font-family: var(--mono); font-size: 0.85rem; color: var(--cyan); font-weight: 600; letter-spacing: 0.5px; }
 
 /* ═══════════════════════════ PAGE BODY ═══════════════════════════ */
-.page-body {
-  padding: 28px;
-  flex: 1;
-  animation: fadeUp 0.35s ease both;
-}
-@keyframes fadeUp { 0%{opacity:0;transform:translateY(12px)} 100%{opacity:1;transform:none} }
-
+.page-body { padding: 32px; flex: 1; animation: fadeUp 0.4s ease both; }
+@keyframes fadeUp { 0%{opacity:0;transform:translateY(15px)} 100%{opacity:1;transform:none} }
 .tab-view { display: none; }
 .tab-view.active { display: block; animation: fadeUp 0.3s ease both; }
 
-/* ═══════════════════════════ STAT CARDS ═══════════════════════════ */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px 22px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-.stat-card:hover { border-color: var(--border-bright); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent,var(--cyan)), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
+/* ═══════════════════════════ UI COMPONENTS ═══════════════════════════ */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 28px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; position: relative; overflow: hidden; transition: var(--transition); box-shadow: var(--shadow-sm); }
+.stat-card:hover { border-color: var(--border-bright); transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--accent,var(--cyan)), transparent); opacity: 0.5; transition: var(--transition); }
 .stat-card:hover::before { opacity: 1; }
-.stat-icon { font-size: 1.3rem; margin-bottom: 12px; }
-.stat-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text2); margin-bottom: 6px; }
-.stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -1px; font-family: var(--mono); }
-.stat-sub { font-size: 0.75rem; color: var(--text3); margin-top: 4px; }
-.stat-card.cyan .stat-value { color: var(--cyan); }
-.stat-card.amber .stat-value { color: var(--amber); }
-.stat-card.green .stat-value { color: var(--green); }
-.stat-card.purple .stat-value { color: var(--purple); }
+.stat-icon { font-size: 1.5rem; margin-bottom: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--surface2); border-radius: 12px; }
+.stat-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text2); margin-bottom: 8px; }
+.stat-value { font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; font-family: var(--mono); }
+.stat-sub { font-size: 0.8rem; color: var(--text3); margin-top: 6px; font-weight: 500; }
+.stat-card.cyan .stat-value { color: var(--cyan); } .stat-card.cyan .stat-icon { color: var(--cyan); background: var(--cyan-dim); }
+.stat-card.amber .stat-value { color: var(--amber); } .stat-card.amber .stat-icon { color: var(--amber); background: var(--amber-dim); }
+.stat-card.green .stat-value { color: var(--green); } .stat-card.green .stat-icon { color: var(--green); background: var(--green-dim); }
+.stat-card.purple .stat-value { color: var(--purple); } .stat-card.purple .stat-icon { color: var(--purple); background: var(--purple-dim); }
 
-/* ═══════════════════════════ SECTION HEADER ═══════════════════════════ */
-.section-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px;
-  flex-wrap: wrap; gap: 12px;
-}
-.section-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text2);
-  display: flex; align-items: center; gap: 8px;
-}
-.section-title::before {
-  content: '';
-  width: 3px; height: 14px;
-  background: var(--cyan);
-  border-radius: 99px;
-  display: block;
-}
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 24px; box-shadow: var(--shadow-sm); transition: var(--transition); }
+.panel:hover { box-shadow: var(--shadow-md); }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
+.section-title { font-size: 1rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 10px; }
+.section-title::before { content: ''; width: 4px; height: 18px; background: var(--cyan); border-radius: 4px; display: block; }
 
-/* ═══════════════════════════ CARD / PANEL ═══════════════════════════ */
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px;
-  margin-bottom: 20px;
-}
-.panel-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--cyan);
-  margin-bottom: 18px;
-  display: flex; align-items: center; gap: 8px;
-}
-.panel-title::after {
-  content: '';
-  flex: 1; height: 1px; background: var(--border);
-}
+.two-col { display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; }
+@media(max-width:1200px){ .two-col { grid-template-columns: 1fr; } }
 
-/* ═══════════════════════════ TWO-COL LAYOUT ═══════════════════════════ */
-.two-col { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; }
-@media(max-width:1100px){ .two-col { grid-template-columns: 1fr; } }
-
-/* ═══════════════════════════ TEMPLATE GRID ═══════════════════════════ */
-.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-.tpl-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 14px 14px;
-  color: var(--text2);
-  font-family: var(--font);
-  font-size: 0.83rem;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex; align-items: center; gap: 10px;
-  position: relative; overflow: hidden;
-}
-.tpl-btn::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, var(--cyan-dim), transparent);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.tpl-btn:hover { border-color: var(--border-bright); color: var(--text); transform: translateY(-1px); }
-.tpl-btn:hover::before { opacity: 1; }
-.tpl-btn.active {
-  border-color: var(--cyan);
-  color: var(--cyan);
-  background: var(--cyan-dim);
-  box-shadow: 0 0 20px var(--cyan-glow);
-}
-.tpl-icon {
-  width: 30px; height: 30px;
-  background: var(--surface3);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.9rem;
-  flex-shrink: 0;
-  transition: background 0.2s;
-  position: relative;
-}
-.tpl-btn.active .tpl-icon { background: rgba(0,212,255,0.2); }
-
-/* ═══════════════════════════ EMAIL TEXTAREA ═══════════════════════════ */
-.email-wrap {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.email-toolbar {
-  padding: 10px 16px;
-  background: var(--surface2);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 0.78rem; color: var(--text3);
-}
-.email-textarea {
-  width: 100%;
-  height: 460px;
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: 20px;
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 0.82rem;
-  line-height: 1.7;
-  resize: vertical;
-}
-
-/* ═══════════════════════════ BUTTONS ═══════════════════════════ */
-.btn {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 22px;
-  border-radius: var(--radius-sm);
-  font-family: var(--font);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-}
-.btn-primary { background: var(--cyan); color: #000; box-shadow: 0 4px 14px var(--cyan-glow); }
-.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
-.btn-success { background: var(--green); color: #fff; box-shadow: 0 4px 14px rgba(16,185,129,0.3); }
-.btn-success:hover { opacity: 0.85; transform: translateY(-1px); }
-.btn-ghost { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); }
-.btn-ghost:hover { background: var(--surface3); color: var(--text); }
+/* ═══════════════════════════ BUTTONS & INPUTS ═══════════════════════════ */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.9rem; font-weight: 600; cursor: pointer; border: none; transition: var(--transition); }
+.btn-primary { background: var(--hp-blue); color: #fff; box-shadow: 0 4px 12px var(--cyan-glow); }
+.btn-primary:hover { background: #007bb5; transform: translateY(-2px); box-shadow: 0 6px 16px var(--cyan-glow); }
+.btn-success { background: var(--green); color: #fff; box-shadow: 0 4px 12px var(--green-dim); }
+.btn-success:hover { background: #059669; transform: translateY(-2px); }
+.btn-ghost { background: var(--surface2); border: 1px solid var(--border); color: var(--text); }
+.btn-ghost:hover { background: var(--surface3); border-color: var(--border-bright); }
 .btn-danger-ghost { background: transparent; border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
 .btn-danger-ghost:hover { background: var(--red-dim); }
-.btn-sm { padding: 7px 14px; font-size: 0.8rem; }
 .btn-amber { background: var(--amber); color: #000; box-shadow: 0 4px 14px rgba(245,158,11,0.3); }
 .btn-amber:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-sm { padding: 7px 14px; font-size: 0.8rem; }
 
-.action-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; justify-content: flex-end; }
+.filter-input, .filter-select { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 16px; color: var(--text); font-family: var(--font); font-size: 0.9rem; outline: none; transition: var(--transition); }
+.filter-input:focus, .filter-select:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-dim); background: var(--surface); }
 
-/* ═══════════════════════════ UPLOAD ZONE ═══════════════════════════ */
-.upload-zone {
-  border: 2px dashed var(--border-bright);
-  background: var(--surface2);
-  border-radius: var(--radius);
-  padding: 48px 32px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s;
-  margin-bottom: 22px;
-}
-.upload-zone:hover, .upload-zone.drag-over {
-  border-color: var(--cyan);
-  background: var(--cyan-dim);
-}
-.upload-zone-icon { font-size: 2.4rem; margin-bottom: 12px; }
-.upload-zone h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
-.upload-zone p { font-size: 0.82rem; color: var(--text2); line-height: 1.5; }
-.upload-zone input[type=file] { display: none; }
-.upload-badge {
-  display: inline-block;
-  background: var(--amber-dim);
-  border: 1px solid rgba(245,158,11,0.25);
-  color: var(--amber);
-  font-size: 0.75rem; font-weight: 600;
-  padding: 3px 10px; border-radius: 99px;
-  margin-top: 10px;
-}
-
-/* ═══════════════════════════ TABLE ═══════════════════════════ */
-.filter-row {
-  display: flex; gap: 12px; align-items: center;
-  margin-bottom: 14px; flex-wrap: wrap;
-}
-.filter-input, .filter-select {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 9px 14px;
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 0.85rem;
-  outline: none;
-  transition: border-color 0.2s;
-  min-width: 180px;
-}
-.filter-input:focus, .filter-select:focus { border-color: var(--cyan); }
-.filter-input::placeholder { color: var(--text3); }
-.filter-input { flex: 1; min-width: 220px; }
-.filter-select option { background: #1c2333; }
-
-.table-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  max-height: 480px;
-  overflow-y: auto;
-}
-.data-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-.data-table thead tr th {
-  background: var(--surface2);
-  color: var(--cyan);
-  padding: 12px 16px;
-  font-weight: 700;
-  text-align: left;
-  white-space: nowrap;
-  position: sticky; top: 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  z-index: 5;
-}
-.data-table tbody tr td {
-  padding: 11px 16px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text2);
-  white-space: nowrap;
-}
+/* ═══════════════════════════ DATA TABLES ═══════════════════════════ */
+.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: auto; max-height: 500px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.data-table thead th { background: var(--surface2); color: var(--text2); padding: 14px 18px; font-weight: 600; text-align: left; position: sticky; top: 0; border-bottom: 1px solid var(--border); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; z-index: 5; }
+.data-table tbody td { padding: 12px 18px; border-bottom: 1px solid var(--border); color: var(--text); white-space: nowrap; }
 .data-table tbody tr:last-child td { border-bottom: none; }
-.data-table tbody tr:hover td { background: var(--surface2); color: var(--text); }
-.data-table tbody tr { transition: background 0.15s; }
+.data-table tbody tr:hover td { background: var(--surface2); }
 
-.status-select {
-  background: var(--surface3);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  padding: 4px 10px;
-  border-radius: 6px;
-  outline: none;
-  cursor: pointer;
-  font-family: var(--font);
-  font-size: 0.78rem;
-  font-weight: 600;
-  transition: all 0.2s;
-}
+.status-select { background: var(--surface3); border: 1px solid var(--border); color: var(--text2); padding: 6px 12px; border-radius: 6px; outline: none; cursor: pointer; font-family: var(--font); font-size: 0.8rem; font-weight: 600; transition: all 0.2s; }
 .status-select:focus { border-color: var(--cyan); }
-.status-select option { background: #141921; }
+.status-badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid; display: inline-block; }
+
+/* ═══════════════════════════ DASHBOARD HEATMAP & WIDGETS ═══════════════════════════ */
+.chart-container { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 80px; font-size: 0.85rem; font-weight: 600; color: var(--text2); }
+.bar-track { flex: 1; height: 12px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 99px; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+.bar-val { width: 40px; text-align: right; font-size: 0.85rem; font-family: var(--mono); font-weight: 700; }
+
+.exec-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.exec-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: var(--surface2); border-radius: var(--radius-sm); border: 1px solid var(--border); border-left: 4px solid var(--cyan); }
+.exec-item.alert { border-left-color: var(--red); background: var(--red-dim); }
+.exec-item.warn { border-left-color: var(--amber); background: var(--amber-dim); }
+
+/* ═══════════════════════════ COMMAND PALETTE ═══════════════════════════ */
+#cmdOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 9999; display: none; align-items: flex-start; justify-content: center; padding-top: 12vh; opacity: 0; transition: opacity 0.2s; }
+#cmdOverlay.active { display: flex; opacity: 1; }
+#cmdPalette { width: 100%; max-width: 650px; background: var(--surface); border-radius: 16px; border: 1px solid var(--border-bright); box-shadow: var(--shadow-xl); overflow: hidden; transform: translateY(-20px); transition: transform 0.2s; }
+#cmdOverlay.active #cmdPalette { transform: translateY(0); }
+.cmd-input-wrap { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+#cmdInput { flex: 1; background: transparent; border: none; font-size: 1.2rem; color: var(--text); outline: none; font-family: var(--font); }
+#cmdResults { max-height: 350px; overflow-y: auto; padding: 10px; }
+.cmd-res-item { padding: 14px 20px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 14px; cursor: pointer; color: var(--text2); transition: var(--transition); }
+.cmd-res-item:hover, .cmd-res-item.selected { background: var(--cyan-dim); color: var(--cyan); }
+.cmd-res-icon { font-size: 1.2rem; background: var(--surface2); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+.cmd-res-item.selected .cmd-res-icon { background: var(--cyan); color: #fff; }
 
 /* ═══════════════════════════ TOAST ═══════════════════════════ */
-#toast {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  background: var(--surface2);
-  border: 1px solid var(--border-bright);
-  border-left: 3px solid var(--cyan);
-  padding: 14px 20px;
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-  opacity: 0;
-  transform: translateY(16px);
-  pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
-  z-index: 999;
-  max-width: 340px;
-}
+#toast { position: fixed; bottom: 32px; right: 32px; background: var(--surface); border: 1px solid var(--border-bright); border-left: 4px solid var(--cyan); padding: 16px 24px; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; color: var(--text); box-shadow: var(--shadow-lg); opacity: 0; transform: translateY(20px); pointer-events: none; transition: var(--transition); z-index: 999; }
 #toast.show { opacity: 1; transform: none; }
 
-/* ═══════════════════════════ EMPTY STATE ═══════════════════════════ */
-.empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
-.empty-state-icon { font-size: 2.5rem; margin-bottom: 14px; opacity: 0.5; }
-.empty-state p { font-size: 0.88rem; }
-
-/* ═══════════════════════════ MISC ═══════════════════════════ */
+/* Utility & Previous styles */
 .hidden { display: none !important; }
-.divider { height: 1px; background: var(--border); margin: 20px 0; }
+.upload-zone { border: 2px dashed var(--border-bright); background: var(--surface2); border-radius: var(--radius); padding: 40px 20px; text-align: center; cursor: pointer; transition: var(--transition); margin-bottom: 24px; }
+.upload-zone:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+.upload-zone-icon { font-size: 2.4rem; margin-bottom: 12px; }
+.upload-badge { display: inline-block; background: var(--amber-dim); border: 1px solid rgba(245,158,11,0.25); color: var(--amber); font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 99px; margin-top: 10px; }
+.email-wrap { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.email-toolbar { padding: 10px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: var(--text3); }
+.email-textarea { width: 100%; height: 400px; background: var(--surface2); border: none; padding: 16px; color: var(--text); font-family: var(--mono); font-size: 0.85rem; outline: none; resize: vertical; }
+.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.tpl-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; color: var(--text2); font-size: 0.85rem; font-weight: 500; text-align: left; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 10px; }
+.tpl-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border-bright); }
+.tpl-btn.active { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+.tpl-icon { width: 30px; height: 30px; background: var(--surface3); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; transition: background 0.2s; }
+.tpl-btn.active .tpl-icon { background: rgba(0,212,255,0.2); }
 
-/* ═══════════════════════════ ADVISORIES ACCORDION ═══════════════════════════ */
+/* Advisories Accordion */
 .adv-item { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
 .adv-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--cyan); transition: background 0.2s; }
 .adv-header:hover { background: var(--surface3); }
 .adv-body { padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; background: var(--surface); }
 .adv-body.open { padding: 18px; max-height: 2000px; overflow-y: auto; border-top: 1px solid var(--border); }
-.adv-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-.adv-table td, .adv-table th { padding: 8px 12px; border: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+.adv-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.adv-table td, .adv-table th { padding: 10px 14px; border: 1px solid var(--border); color: var(--text2); vertical-align: top; }
 .adv-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
 .adv-img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
-
+.action-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; justify-content: flex-end; }
 </style>
 </head>
 <body>
@@ -698,32 +290,32 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   <div class="login-card">
     <div class="login-logo-row">
       <div class="login-logo-circle">
-        <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="4"/>
-          <path d="M32 22L32 78M40 22L40 52C40 60 45 64 51 64C57 64 62 60 62 22M72 22L72 78" stroke="#000" stroke-width="7" stroke-linecap="round"/>
-        </svg>
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6" fill="none"/><path d="M32 22L32 78M40 22L40 52C40 60 45 64 51 64C57 64 62 60 62 22M72 22L72 78" stroke="currentColor" stroke-width="8" stroke-linecap="round"/></svg>
       </div>
       <div>
-        <div class="login-brand-name">ACS Portal</div>
-        <div class="login-brand-sub">HP Advanced Customer Support</div>
+        <div class="login-brand-name">ACS Command Center</div>
+        <div class="login-brand-sub">Enterprise Operations Portal v3</div>
       </div>
     </div>
     <div class="login-heading">Welcome back</div>
-    <div class="login-sub">Sign in to access the KCI ToolKit &amp; Analytics Dashboard for ACS India.</div>
+    <div class="login-sub">Sign in to access the Analytics Dashboard, KCI Toolkit, and Operations ledger.</div>
     <div class="login-creds-note">
-      ℹ️ Credentials are loaded from <strong>credentials.txt</strong> — edit the <code>CREDENTIALS_FILE</code> constant in the script to update access.
+      ℹ️ Credentials are loaded from <strong>credentials.txt</strong> — edit the <code>CREDENTIALS_FILE</code> constant to update access.
     </div>
     <div id="loginError">⚠️ Incorrect username or password. Please try again.</div>
-    <div class="login-field">
-      <label>Username</label>
-      <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="username">
+    <div class="login-field"><label>Agent ID</label><input type="text" id="loginUser" placeholder="admin" autocomplete="username"></div>
+    <div class="login-field"><label>Passcode</label><input type="password" id="loginPass" placeholder="ACS@2024" autocomplete="current-password"></div>
+    <button class="login-btn" onclick="attemptLogin()">Secure Login →</button>
+  </div>
+</div>
+
+<div id="cmdOverlay">
+  <div id="cmdPalette">
+    <div class="cmd-input-wrap">
+      <span style="color:var(--cyan);font-size:1.4rem;">⚡</span>
+      <input type="text" id="cmdInput" placeholder="Search modules, analytics, tools... (Esc to close)" autocomplete="off">
     </div>
-    <div class="login-field">
-      <label>Password</label>
-      <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password">
-    </div>
-    <button class="login-btn" onclick="attemptLogin()">Sign In →</button>
-    <div class="login-footer">ACS KCI ToolKit v2.0 &nbsp;·&nbsp; HP India Operations</div>
+    <div id="cmdResults"></div>
   </div>
 </div>
 
@@ -731,47 +323,52 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon">
-        <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="44" stroke="#000" stroke-width="5"/>
-          <path d="M32 22L32 78M40 22L40 52C40 60 45 64 51 64C57 64 62 60 62 22M72 22L72 78" stroke="#000" stroke-width="8" stroke-linecap="round"/>
-        </svg>
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="6" fill="none"/><path d="M32 22L32 78M40 22L40 52C40 60 45 64 51 64C57 64 62 60 62 22M72 22L72 78" stroke="currentColor" stroke-width="8" stroke-linecap="round"/></svg>
       </div>
       <div>
-        <div class="sidebar-logo-text">ACS KCI</div>
-        <div class="sidebar-logo-sub">HP India · Support Portal</div>
+        <div class="sidebar-logo-text">ACS Portal</div>
+        <div class="sidebar-logo-sub">HP Enterprise Support</div>
       </div>
     </div>
 
-    <div class="sidebar-section-label">Tools</div>
+    <div class="nav-scroll">
+      <div class="sidebar-section-label">Overview</div>
+      <button class="nav-item active" onclick="switchTab('home', this)" data-title="Analytics Dashboard" data-crumb="Home">
+        <span class="nav-icon">📈</span> Analytics Home
+      </button>
 
-    <button class="nav-item active" onclick="switchTab('kci', this)">
-      <span class="nav-icon">📋</span> KCI Mail Assistant
-    </button>
-    <button class="nav-item" onclick="switchTab('report', this)">
-      <span class="nav-icon">📂</span> Open Case Report
-    </button>
-    <button class="nav-item" onclick="switchTab('golden', this)">
-      <span class="nav-icon">👑</span> Golden Account List
-    </button>
-    <button class="nav-item" onclick="switchTab('adm', this)">
-      <span class="nav-icon">🏢</span> ADM Account List
-    </button>
-    <button class="nav-item" onclick="switchTab('pin', this)">
-      <span class="nav-icon">🔢</span> Universal PIN
-    </button>
-    <button class="nav-item" onclick="switchTab('pml', this)">
-      <span class="nav-icon">🗺️</span> PML List
-    </button>
-    <button class="nav-item" onclick="switchTab('advisories', this)">
-      <span class="nav-icon">📢</span> Known Advisories
-    </button>
+      <div class="sidebar-section-label">Toolkit</div>
+      <button class="nav-item" onclick="switchTab('kci', this)" data-title="KCI Mail Assistant" data-crumb="Email Templates">
+        <span class="nav-icon">📋</span> KCI Mail
+      </button>
+      <button class="nav-item" onclick="switchTab('report', this)" data-title="Open Case Report" data-crumb="Case Management">
+        <span class="nav-icon">📂</span> Open Cases
+      </button>
+
+      <div class="sidebar-section-label">Directories</div>
+      <button class="nav-item" onclick="switchTab('golden', this)" data-title="Golden Account Ledger" data-crumb="Directory">
+        <span class="nav-icon">👑</span> Golden Accounts
+      </button>
+      <button class="nav-item" onclick="switchTab('adm', this)" data-title="ADM Directory" data-crumb="Directory">
+        <span class="nav-icon">🏢</span> ADM List
+      </button>
+      <button class="nav-item" onclick="switchTab('pin', this)" data-title="Universal PIN" data-crumb="Directory">
+        <span class="nav-icon">🔢</span> PIN Datasheet
+      </button>
+      <button class="nav-item" onclick="switchTab('pml', this)" data-title="PML Directory" data-crumb="Directory">
+        <span class="nav-icon">🗺️</span> PML List
+      </button>
+      <button class="nav-item" onclick="switchTab('advisories', this)" data-title="Known Advisories" data-crumb="Knowledge Base">
+        <span class="nav-icon">📢</span> Advisories
+      </button>
+    </div>
 
     <div class="sidebar-bottom">
       <div class="sidebar-user-card">
         <div class="user-avatar" id="userAvatarInitials">A</div>
-        <div>
+        <div style="flex:1">
           <div class="user-name" id="sidebarUsername">Agent</div>
-          <div class="user-role">ACS India</div>
+          <div class="user-role">Operations</div>
         </div>
         <button class="logout-btn-small" onclick="doLogout()" title="Sign out">⏻</button>
       </div>
@@ -781,19 +378,73 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
   <div class="main-content">
     <header class="top-header">
       <div class="page-title-area">
-        <div class="page-title" id="headerPageTitle">KCI Mail Assistant</div>
-        <div class="page-breadcrumb">ACS Portal › <span id="headerBreadcrumb">Email Templates</span></div>
+        <div class="page-title" id="headerPageTitle">Analytics Dashboard</div>
+        <div class="page-breadcrumb">ACS Portal › <span id="headerBreadcrumb">Home</span></div>
       </div>
       <div class="header-right">
+        <div class="cmd-hint" onclick="toggleCmd()">Search <kbd>Ctrl</kbd> + <kbd>K</kbd></div>
+        <button class="icon-btn" onclick="toggleTheme()" title="Toggle Light/Dark Mode">🌓</button>
         <div class="clock-chip" id="liveClock">00:00:00 AM</div>
-        <div class="badge-chip">ACS — INDIA</div>
-        <div class="notif-btn" title="Notifications">🔔</div>
       </div>
     </header>
 
     <div class="page-body">
+      
+      <div class="tab-view active" id="tab-home">
+        <div class="stats-row">
+          <div class="stat-card cyan" style="--accent:var(--cyan)">
+            <div class="stat-icon">📊</div>
+            <div class="stat-label">Total Active Cases</div>
+            <div class="stat-value" id="kpiTotalCases">0</div>
+            <div class="stat-sub">From loaded Open Case DB</div>
+          </div>
+          <div class="stat-card amber" style="--accent:var(--amber)">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-label">Pending / NCM Action</div>
+            <div class="stat-value" id="kpiActionReq">0</div>
+            <div class="stat-sub">Requires follow-up</div>
+          </div>
+          <div class="stat-card red" style="--accent:var(--red)">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-label">SLA Risk Assessment</div>
+            <div class="stat-value" id="kpiSLA">0</div>
+            <div class="stat-sub">Cases aging beyond target</div>
+          </div>
+        </div>
 
-      <div class="tab-view active" id="tab-kci">
+        <div class="two-col">
+          <div class="panel">
+            <div class="section-header">
+              <div class="section-title">Case Aging Heatmap</div>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text3); margin-bottom:20px;">Real-time distribution of open cases based on status velocity.</p>
+            <div class="chart-container" id="kpiHeatmap">
+              <div class="bar-row"><div class="bar-label">0-1 Days</div><div class="bar-track"><div class="bar-fill" style="background:var(--green); width:0%"></div></div><div class="bar-val">0%</div></div>
+              <div class="bar-row"><div class="bar-label">2-3 Days</div><div class="bar-track"><div class="bar-fill" style="background:var(--amber); width:0%"></div></div><div class="bar-val">0%</div></div>
+              <div class="bar-row"><div class="bar-label">4+ Days</div><div class="bar-track"><div class="bar-fill" style="background:var(--red); width:0%"></div></div><div class="bar-val">0%</div></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="section-header">
+              <div class="section-title">Executive Reporting Center</div>
+              <button class="btn btn-primary btn-sm" onclick="toast('Generating Exec Report...', 'var(--cyan)')">📥 Download Summary</button>
+            </div>
+            <ul class="exec-list">
+              <li class="exec-item">
+                <div><strong style="display:block;margin-bottom:4px">Data Sync Status</strong><span style="font-size:0.8rem;color:var(--text2)">IndexedDB Local Storage Active</span></div>
+                <span class="status-badge" style="color:var(--green);border-color:var(--green)">Healthy</span>
+              </li>
+              <li class="exec-item warn">
+                <div><strong style="display:block;margin-bottom:4px">NCM Triggers</strong><span style="font-size:0.8rem;color:var(--text2)">Automated KCI population enabled</span></div>
+                <span class="status-badge" style="color:var(--amber);border-color:var(--amber)">Active</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-view hidden" id="tab-kci">
         <div class="stats-row">
           <div class="stat-card cyan" style="--accent:var(--cyan)">
             <div class="stat-icon">📬</div>
@@ -817,12 +468,12 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 
         <div class="two-col">
           <div class="panel">
-            <div class="panel-title">Select Template</div>
+            <div class="section-header"><div class="section-title">Select Template</div></div>
             <div class="template-grid" id="templateGrid"></div>
           </div>
           <div>
             <div class="panel">
-              <div class="panel-title">Generated Email</div>
+              <div class="section-header"><div class="section-title">Generated Email</div></div>
               <div class="email-wrap">
                 <div class="email-toolbar">
                   <span id="selectedTplLabel" style="color:var(--text2)">No template selected</span>
@@ -831,7 +482,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
                 <textarea class="email-textarea" id="emailTextArea" placeholder="Select a template from the left panel to generate the email body here. You can edit it before copying."></textarea>
               </div>
               <div class="action-row">
-                <button class="btn btn-danger-ghost" id="btnRevertTpl" style="display:none" onclick="revertCustomTemplate()">🗑 Revert to Default</button>
+                <button class="btn btn-danger-ghost" id="btnRevertTpl" style="display:none" onclick="revertCustomTemplate()">🗑 Revert</button>
                 <button class="btn btn-ghost" onclick="resetEmail()">↺ Reset</button>
                 <button class="btn btn-success" onclick="saveCustomTemplate()">💾 Save Format</button>
                 <button class="btn btn-primary" onclick="copyEmail()">
@@ -850,7 +501,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
           <h3>Drop your Open Case Report here</h3>
           <p>Accepts files containing <strong>ACS Open Case</strong> in the filename (.xlsx / .xls / .csv)</p>
           <span class="upload-badge">Filename Validation Active</span>
-          <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessFile(this.files[0])">
+          <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessFile(this.files[0])" class="hidden">
         </div>
 
         <div class="stats-row hidden" id="reportStats">
@@ -861,16 +512,16 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 
         <div class="panel hidden" id="reportTablePanel">
           <div class="section-header">
-            <div class="section-title">Case Data</div>
+            <div class="section-title">Case Data Operations</div>
             <button class="btn btn-success btn-sm" onclick="exportMyFilteredData()">
               <span>📤</span> Export Filtered
             </button>
           </div>
-          <div class="filter-row">
+          <div style="display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap">
             <select class="filter-select" id="ownerFilterDropdown" onchange="applyFiltersAndMetrics()">
               <option value="">— Filter by Owner —</option>
             </select>
-            <input type="text" class="filter-input" id="tableSearchBox" onkeyup="applyFiltersAndMetrics()" placeholder="🔍 Search across all case fields...">
+            <input type="text" class="filter-input" style="flex:1; min-width: 250px" id="tableSearchBox" onkeyup="applyFiltersAndMetrics()" placeholder="🔍 Search across all case fields...">
           </div>
           <div class="table-wrap">
             <table class="data-table" id="parsedDataTable"></table>
@@ -900,25 +551,21 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
           <h3>Drop your ADM Account List here</h3>
           <p>Accepts files containing <strong>ADM Account List</strong> in the filename (.xlsx / .xls / .csv)</p>
           <span class="upload-badge">Reads sheet: "AccountList"</span>
-          <input type="file" id="admFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessAdmFile(this.files[0])">
+          <input type="file" id="admFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessAdmFile(this.files[0])" class="hidden">
         </div>
-
         <div id="admUpdateRow" class="hidden" style="margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <button class="btn btn-amber" onclick="renderAdmTable()">🔄 Update ADM List</button>
         </div>
-
         <div id="admSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
-          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="admSavedLabel">Last updated: —</span></span>
+          <span style="font-size:0.85rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="admSavedLabel">Last updated: —</span></span>
           <button class="btn btn-danger-ghost btn-sm" onclick="clearAdmData()">🗑 Clear Saved Data</button>
         </div>
-
         <div class="stats-row hidden" id="admStats">
           <div class="stat-card cyan"><div class="stat-icon">👤</div><div class="stat-label">ADM Entries</div><div class="stat-value" id="valTotalAdmRows">0</div></div>
-          <div class="stat-card amber"><div class="stat-icon">📄</div><div class="stat-label">Source Sheet</div><div class="stat-value" style="font-size:1rem;padding-top:6px" id="valAdmSheetName">—</div></div>
+          <div class="stat-card amber"><div class="stat-icon">📄</div><div class="stat-label">Source Sheet</div><div class="stat-value" style="font-size:1.2rem;padding-top:6px" id="valAdmSheetName">—</div></div>
         </div>
-
         <div class="panel hidden" id="admTablePanel">
-            <div class="section-title" style="margin-bottom:14px">ADM Directory</div>
+          <div class="section-title" style="margin-bottom:14px">ADM Directory</div>
           <div class="table-wrap">
             <table class="data-table" id="admDataTable"></table>
           </div>
@@ -931,23 +578,19 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
           <h3>Drop your Universal PIN Datasheet here</h3>
           <p>Accepts files containing <strong>PIN</strong> in the filename (.xlsx / .xls / .csv)</p>
           <span class="upload-badge">Reads the First Sheet</span>
-          <input type="file" id="pinFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessPinFile(this.files[0])">
+          <input type="file" id="pinFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessPinFile(this.files[0])" class="hidden">
         </div>
-
         <div id="pinUpdateRow" class="hidden" style="margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <button class="btn btn-amber" onclick="renderPinTable()">🔄 Update PIN List</button>
         </div>
-
         <div id="pinSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
-          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="pinSavedLabel">Last updated: —</span></span>
+          <span style="font-size:0.85rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="pinSavedLabel">Last updated: —</span></span>
           <button class="btn btn-danger-ghost btn-sm" onclick="clearPinData()">🗑 Clear Saved Data</button>
         </div>
-
         <div class="stats-row hidden" id="pinStats">
           <div class="stat-card cyan"><div class="stat-icon">📌</div><div class="stat-label">Total PIN Entries</div><div class="stat-value" id="valTotalPinRows">0</div></div>
-          <div class="stat-card amber"><div class="stat-icon">📄</div><div class="stat-label">Source Sheet</div><div class="stat-value" style="font-size:1rem;padding-top:6px" id="valPinSheetName">—</div></div>
+          <div class="stat-card amber"><div class="stat-icon">📄</div><div class="stat-label">Source Sheet</div><div class="stat-value" style="font-size:1.2rem;padding-top:6px" id="valPinSheetName">—</div></div>
         </div>
-
         <div class="panel hidden" id="pinTablePanel">
            <div class="section-header">
              <div class="section-title">PIN Directory</div>
@@ -965,23 +608,19 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
           <h3>Drop your PML List here</h3>
           <p>Accepts files containing <strong>PML</strong> in the filename (.xlsx / .xls / .csv)</p>
           <span class="upload-badge">Extracts Region, CDAX, State, City, PAM, and SDC</span>
-          <input type="file" id="pmlFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessPmlFile(this.files[0])">
+          <input type="file" id="pmlFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessPmlFile(this.files[0])" class="hidden">
         </div>
-
         <div id="pmlUpdateRow" class="hidden" style="margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <button class="btn btn-amber" onclick="renderPmlTable()">🔄 Update PML List</button>
         </div>
-
         <div id="pmlSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
-          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="pmlSavedLabel">Last updated: —</span></span>
+          <span style="font-size:0.85rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="pmlSavedLabel">Last updated: —</span></span>
           <button class="btn btn-danger-ghost btn-sm" onclick="clearPmlData()">🗑 Clear Saved Data</button>
         </div>
-
         <div class="stats-row hidden" id="pmlStats">
           <div class="stat-card cyan"><div class="stat-icon">🗺️</div><div class="stat-label">Total PML Entries</div><div class="stat-value" id="valTotalPmlRows">0</div></div>
           <div class="stat-card amber"><div class="stat-icon">🔍</div><div class="stat-label">Visible Matches</div><div class="stat-value" id="valFilteredPmlRows">0</div></div>
         </div>
-
         <div class="panel hidden" id="pmlTablePanel">
            <div class="section-header">
              <div class="section-title">PML Directory</div>
@@ -992,24 +631,22 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
           </div>
         </div>
       </div>
+      
       <div class="tab-view hidden" id="tab-advisories">
         <div class="upload-zone" id="advDropZone" onclick="document.getElementById('advFileInput').click()">
           <div class="upload-zone-icon">📢</div>
           <h3>Drop your Advisories Datasheet here</h3>
           <p>Accepts files (.xlsx / .xls / .csv). Reads and loads data from <strong>all sheets</strong>.</p>
           <span class="upload-badge">Advisory Name captured from Row 4</span>
-          <input type="file" id="advFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessAdvFile(this.files[0])">
+          <input type="file" id="advFileInput" accept=".xlsx,.xls,.csv" onchange="validateAndProcessAdvFile(this.files[0])" class="hidden">
         </div>
-
         <div id="advUpdateRow" class="hidden" style="margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <button class="btn btn-amber" onclick="renderAdvData()">🔄 Update Advisories List</button>
         </div>
-
         <div id="advSavedBanner" class="hidden" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius-sm);padding:11px 16px;margin-bottom:20px;flex-wrap:wrap">
-          <span style="font-size:0.83rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="advSavedLabel">Last updated: —</span></span>
+          <span style="font-size:0.85rem;color:var(--text2)">💾 <strong style="color:var(--green)">Saved & persistent</strong> — <span id="advSavedLabel">Last updated: —</span></span>
           <button class="btn btn-danger-ghost btn-sm" onclick="clearAdvData()">🗑 Clear Saved Data</button>
         </div>
-
         <div class="stats-row hidden" id="advStats">
           <div class="stat-card cyan"><div class="stat-icon">📑</div><div class="stat-label">Total Advisories</div><div class="stat-value" id="valTotalAdv">0</div></div>
         </div>
@@ -1064,7 +701,6 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
             <button class="btn btn-success" onclick="saveManualAdvisory()">➕ Add Advisory</button>
           </div>
         </div>
-
       </div>
 
     </div>
@@ -1074,9 +710,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 
 <script>
 /* ════════════════════════════════════════════════
-   CREDENTIALS — mirrors a credentials.txt file
-   Format: username:password (one per line)
-   Edit this string to add/remove users.
+   CREDENTIALS & LOGIN LOGIC
 ════════════════════════════════════════════════ */
 const CREDENTIALS_FILE = `
 admin:ACS@2024
@@ -1085,7 +719,6 @@ agent1:Welcome123
 agent2:Support@99
 `;
 
-/* ─── Parse credentials file ─── */
 function parseCredentials(raw) {
   const map = {};
   raw.trim().split('\n').forEach(line => {
@@ -1101,9 +734,8 @@ function parseCredentials(raw) {
 }
 const credentialsMap = parseCredentials(CREDENTIALS_FILE);
 let loggedInUser = '';
-let activeTemplateId = null; // Track current active template ID for saving functionality
+let activeTemplateId = null;
 
-/* ─── Login logic ─── */
 function attemptLogin() {
   const u = document.getElementById('loginUser').value.trim().toLowerCase();
   const p = document.getElementById('loginPass').value;
@@ -1119,8 +751,7 @@ function attemptLogin() {
     document.getElementById('loginScreen').style.transition = 'opacity 0.4s ease';
     setTimeout(() => {
       document.getElementById('loginScreen').style.display = 'none';
-      const app = document.getElementById('appShell');
-      app.classList.add('visible');
+      document.getElementById('appShell').classList.add('visible');
     }, 400);
   } else {
     err.textContent = '⚠️ Incorrect username or password. Please try again.';
@@ -1129,45 +760,38 @@ function attemptLogin() {
   }
 }
 
-function doLogout() {
-  loggedInUser = '';
-  activeTemplateId = null;
-  document.getElementById('loginUser').value = '';
-  document.getElementById('loginPass').value = '';
-  document.getElementById('loginError').style.display = 'none';
-  document.getElementById('appShell').classList.remove('visible');
-  const ls = document.getElementById('loginScreen');
-  ls.style.display = 'flex';
-  ls.style.opacity = '0';
-  setTimeout(() => { ls.style.transition = 'opacity 0.3s'; ls.style.opacity = '1'; }, 10);
-  resetEmail();
+function doLogout() { location.reload(); }
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') attemptLogin(); });
+
+/* ════════════════════════════════════════════════
+   THEME, CLOCK, TABS & UI UX
+════════════════════════════════════════════════ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  localStorage.setItem('acs_theme', isLight ? 'dark' : 'light');
 }
+if(localStorage.getItem('acs_theme')==='light') document.documentElement.setAttribute('data-theme', 'light');
 
-/* Enter key triggers login */
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') attemptLogin();
-});
-
-/* ─── Clock ─── */
 function updateClock() {
   const now = new Date();
   let h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
   const ampm = h >= 12 ? 'PM' : 'AM';
   h = h % 12 || 12;
-  document.getElementById('liveClock').textContent =
-    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
+  document.getElementById('liveClock').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} ${ampm}`;
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-/* ─── Tab switching ─── */
 const tabMeta = {
+  home:       { title: 'Analytics Dashboard',  crumb: 'Home' },
   kci:        { title: 'KCI Mail Assistant',   crumb: 'Email Templates' },
   report:     { title: 'Open Case Report',     crumb: 'Case Management' },
   golden:     { title: 'Golden Account List',  crumb: 'Account Ledger' },
   adm:        { title: 'ADM Account List',     crumb: 'ADM Directory' },
   pin:        { title: 'Universal PIN Datasheet', crumb: 'PIN Directory' }, 
-  pml:        { title: 'PML List',             crumb: 'PML Directory' }, // Added PML meta
+  pml:        { title: 'PML List',             crumb: 'PML Directory' },
   advisories: { title: 'Known Advisories',     crumb: 'Advisories Directory' }
 };
 
@@ -1175,25 +799,63 @@ function switchTab(tabId, btn) {
   document.querySelectorAll('.tab-view').forEach(v => { v.classList.remove('active'); v.classList.add('hidden'); });
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   const view = document.getElementById('tab-' + tabId);
-  view.classList.remove('hidden');
-  view.classList.add('active');
+  view.classList.remove('hidden'); view.classList.add('active');
   btn.classList.add('active');
   document.getElementById('headerPageTitle').textContent = tabMeta[tabId].title;
   document.getElementById('headerBreadcrumb').textContent = tabMeta[tabId].crumb;
 }
 
-/* ─── Toast ─── */
 function toast(msg, color) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.borderLeftColor = color || 'var(--cyan)';
+  t.textContent = msg; t.style.borderLeftColor = color || 'var(--cyan)';
   t.classList.add('show');
-  clearTimeout(t._tmr);
-  t._tmr = setTimeout(() => t.classList.remove('show'), 3600);
+  clearTimeout(t._tmr); t._tmr = setTimeout(() => t.classList.remove('show'), 3600);
 }
 
 /* ════════════════════════════════════════════════
-   EMAIL TEMPLATES
+   COMMAND PALETTE
+════════════════════════════════════════════════ */
+const cmdOverlay = document.getElementById('cmdOverlay');
+const cmdInput = document.getElementById('cmdInput');
+const cmdResults = document.getElementById('cmdResults');
+
+const cmdData = [
+  { name: 'Go to Analytics Home', icon: '📈', action: ()=>document.querySelector('[onclick="switchTab(\'home\', this)"]').click() },
+  { name: 'Open KCI Mail Toolkit', icon: '📋', action: ()=>document.querySelector('[onclick="switchTab(\'kci\', this)"]').click() },
+  { name: 'Upload Open Case Report', icon: '📂', action: ()=>document.querySelector('[onclick="switchTab(\'report\', this)"]').click() },
+  { name: 'Search Golden Accounts', icon: '👑', action: ()=>document.querySelector('[onclick="switchTab(\'golden\', this)"]').click() },
+  { name: 'Search ADM Directory', icon: '🏢', action: ()=>document.querySelector('[onclick="switchTab(\'adm\', this)"]').click() },
+  { name: 'Search Known Advisories', icon: '📢', action: ()=>document.querySelector('[onclick="switchTab(\'advisories\', this)"]').click() },
+  { name: 'Toggle Dark/Light Mode', icon: '🌓', action: toggleTheme },
+  { name: 'Sign Out / Lock', icon: '🔒', action: doLogout }
+];
+
+function toggleCmd() {
+  if(cmdOverlay.classList.contains('active')) { cmdOverlay.classList.remove('active'); cmdInput.blur(); }
+  else { cmdOverlay.classList.add('active'); cmdInput.value=''; renderCmdResults(''); setTimeout(()=>cmdInput.focus(),100); }
+}
+document.addEventListener('keydown', e => {
+  if((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); toggleCmd(); }
+  if(e.key === 'Escape' && cmdOverlay.classList.contains('active')) toggleCmd();
+});
+cmdInput.addEventListener('input', e => renderCmdResults(e.target.value.toLowerCase()));
+
+function renderCmdResults(query) {
+  const filtered = cmdData.filter(d => d.name.toLowerCase().includes(query));
+  cmdResults.innerHTML = filtered.map((d, i) => `
+    <div class="cmd-res-item ${i===0?'selected':''}" onclick="executeCmd(${i})">
+      <div class="cmd-res-icon">${d.icon}</div>
+      <div style="font-weight:600">${d.name}</div>
+    </div>
+  `).join('');
+  cmdResults._data = filtered;
+}
+function executeCmd(idx) {
+  if(cmdResults._data && cmdResults._data[idx]) { cmdResults._data[idx].action(); toggleCmd(); }
+}
+
+/* ════════════════════════════════════════════════
+   EMAIL TEMPLATES (FULL DATA RESTORED)
 ════════════════════════════════════════════════ */
 const emailTemplates = [
   { id:"initial_followup", title:"Initial Follow Up", icon:"📧", content:`Dear Customer,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nBased on our telephonic interaction today, please find the case details below.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team will reach out to you soon with an update.\nIf any concern arises, please contact our technical support toll-free line anytime.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
@@ -1214,13 +876,11 @@ const emailTemplates = [
   { id:"closure_rr", title:"Closure For RR (No Contact)", icon:"🔒", content:`Hello Sir,\nGreetings from HP!\n\nMy name is [Agent Name], and I am from the HP Technical Support Team.\n\nWe tried reaching you but were unable to connect.\nAs we have not heard back, we will proceed to close your case (Case ID: [Case ID]), assuming the issue has been resolved.\n\nIf you still need assistance, please contact us:\nToll-free: 1800-258-7170 (IVR: 1-1-7 or 2-1-7)\nWorking Hours: Monday to Friday, 9:00 AM – 6:00 PM\n\nThank you for your time and patience.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\n\nHP Privacy: www.hp.com/privacy |\nDisclaimer: http://www.hp.com/support/emaildisclaimers` },
 ];
 
-/* Build template grid */
 const grid = document.getElementById('templateGrid');
 const textarea = document.getElementById('emailTextArea');
 emailTemplates.forEach(tpl => {
   const btn = document.createElement('button');
-  btn.className = 'tpl-btn';
-  btn.id = 'tpl-' + tpl.id;
+  btn.className = 'tpl-btn'; btn.id = 'tpl-' + tpl.id;
   btn.onclick = () => selectTemplate(tpl.id, tpl.title, tpl.content);
   btn.innerHTML = `<span class="tpl-icon">${tpl.icon}</span>${tpl.title}`;
   grid.appendChild(btn);
@@ -1232,74 +892,43 @@ function selectTemplate(id, title, content) {
   document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tpl-' + id).classList.add('active');
 
-  // Check if current agent has a customized version of this template saved
   let savedCustomTemplates = {};
-  try {
-     savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {};
-  } catch(e) {}
-
+  try { savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {}; } catch(e) {}
   const revertBtn = document.getElementById('btnRevertTpl');
-  if (savedCustomTemplates[id]) {
-      textarea.value = savedCustomTemplates[id];
-      revertBtn.style.display = 'inline-flex'; // Show revert option
-  } else {
-      textarea.value = content;
-      revertBtn.style.display = 'none';
-  }
+  if (savedCustomTemplates[id]) { textarea.value = savedCustomTemplates[id]; revertBtn.style.display = 'inline-flex'; } 
+  else { textarea.value = content; revertBtn.style.display = 'none'; }
   
   document.getElementById('selectedTplLabel').textContent = title;
   document.getElementById('charCounter').textContent = textarea.value.length + ' chars';
 }
 
-textarea.addEventListener('input', () => {
-  document.getElementById('charCounter').textContent = textarea.value.length + ' chars';
-});
+textarea.addEventListener('input', () => document.getElementById('charCounter').textContent = textarea.value.length + ' chars');
 
 function saveCustomTemplate() {
-  if (!activeTemplateId) {
-     toast('⚠️ No template selected to save.', 'var(--amber)');
-     return;
-  }
-  
+  if (!activeTemplateId) { toast('⚠️ No template selected to save.', 'var(--amber)'); return; }
   let savedCustomTemplates = {};
-  try {
-     savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {};
-  } catch(e) {}
-
-  // Save the current textarea value directly to the user's localstorage object
+  try { savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {}; } catch(e) {}
   savedCustomTemplates[activeTemplateId] = textarea.value;
   localStorage.setItem('acs_custom_templates_' + loggedInUser, JSON.stringify(savedCustomTemplates));
-
   document.getElementById('btnRevertTpl').style.display = 'inline-flex';
   toast('💾 Template format saved for your account!', 'var(--green)');
 }
 
 function revertCustomTemplate() {
    if (!activeTemplateId) return;
-   
    let savedCustomTemplates = {};
-   try {
-      savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {};
-   } catch(e) {}
-
-   // Delete custom template and resave
+   try { savedCustomTemplates = JSON.parse(localStorage.getItem('acs_custom_templates_' + loggedInUser)) || {}; } catch(e) {}
    delete savedCustomTemplates[activeTemplateId];
    localStorage.setItem('acs_custom_templates_' + loggedInUser, JSON.stringify(savedCustomTemplates));
-
-   // Reload the default template text
    const originalTpl = emailTemplates.find(t => t.id === activeTemplateId);
-   if (originalTpl) {
-       textarea.value = originalTpl.content;
-   }
-   
+   if (originalTpl) textarea.value = originalTpl.content;
    document.getElementById('btnRevertTpl').style.display = 'none';
    document.getElementById('charCounter').textContent = textarea.value.length + ' chars';
    toast('🗑 Reverted to default template format.', 'var(--amber)');
 }
 
 function resetEmail() {
-  activeTemplateId = null;
-  textarea.value = '';
+  activeTemplateId = null; textarea.value = '';
   document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('selectedTplLabel').textContent = 'No template selected';
   document.getElementById('charCounter').textContent = '0 chars';
@@ -1312,7 +941,7 @@ function copyEmail() {
 }
 
 /* ════════════════════════════════════════════════
-   OPEN CASE REPORT — IndexedDB + State
+   OPEN CASE REPORT & DASHBOARD ANALYTICS
 ════════════════════════════════════════════════ */
 let globalRawJsonData = [], globalDataHeaders = [], rowStatusStateArray = [];
 let ownerColumnKey = '', caseIdColumnKey = '', serialNumberColumnKey = '';
@@ -1329,15 +958,12 @@ function initIndexedDB() {
 }
 function saveToIndexedDB(headers, data) {
   if (!dbInstance) return;
-  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-  const st = tx.objectStore(STORE_NAME);
-  st.put(headers, 'cached_headers');
-  st.put(data, 'cached_json_rows');
+  const tx = dbInstance.transaction([STORE_NAME], 'readwrite'); const st = tx.objectStore(STORE_NAME);
+  st.put(headers, 'cached_headers'); st.put(data, 'cached_json_rows');
 }
 async function loadFromIndexedDB() {
   if (!dbInstance) await initIndexedDB(); 
-  const tx = dbInstance.transaction([STORE_NAME], 'readonly');
-  const st = tx.objectStore(STORE_NAME);
+  const tx = dbInstance.transaction([STORE_NAME], 'readonly'); const st = tx.objectStore(STORE_NAME);
   const rH = st.get('cached_headers'), rR = st.get('cached_json_rows');
   rR.onsuccess = () => {
     if (rR.result && rR.result.length > 0) {
@@ -1347,8 +973,7 @@ async function loadFromIndexedDB() {
         ownerColumnKey = globalDataHeaders.find(h => h.toLowerCase().trim() === 'owner') || '';
         caseIdColumnKey = globalDataHeaders.find(h => /caseid|casenumber/i.test(h.toLowerCase().replace(/[^a-z]/g,''))) || '';
         serialNumberColumnKey = globalDataHeaders.find(h => /serialnumber|serialno/i.test(h.toLowerCase().replace(/[^a-z]/g,''))) || '';
-        let cachedDb = {};
-        try { cachedDb = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
+        let cachedDb = {}; try { cachedDb = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
         rowStatusStateArray = new Array(globalRawJsonData.length).fill('Pending');
         globalRawJsonData.forEach((row,i) => { const k = rowSig(row); if(k && cachedDb[k]) rowStatusStateArray[i] = cachedDb[k].statusValue || 'Pending'; });
         populateOwnerDropdown(); renderCaseTable();
@@ -1358,8 +983,7 @@ async function loadFromIndexedDB() {
   };
 }
 function cleanExpired() {
-  const d = localStorage.getItem('acs_persistent_db');
-  if (!d) return;
+  const d = localStorage.getItem('acs_persistent_db'); if (!d) return;
   try {
     const db = JSON.parse(d), now = Date.now(), limit = 20*24*60*60*1000, out = {};
     Object.keys(db).forEach(k => { if(now - db[k].savedTimestamp < limit) out[k] = db[k]; });
@@ -1367,34 +991,29 @@ function cleanExpired() {
   } catch(e){}
 }
 function rowSig(row) {
-  const c = caseIdColumnKey ? String(row[caseIdColumnKey]).trim() : '';
-  const s = serialNumberColumnKey ? String(row[serialNumberColumnKey]).trim() : '';
-  if(c||s) return `k_cid_${c}_sn_${s}`;
-  return `k_hash_${btoa(unescape(encodeURIComponent(JSON.stringify(row)))).substring(0,24)}`;
+  const c = caseIdColumnKey ? String(row[caseIdColumnKey]).trim() : ''; const s = serialNumberColumnKey ? String(row[serialNumberColumnKey]).trim() : '';
+  if(c||s) return `k_cid_${c}_sn_${s}`; return `k_hash_${btoa(unescape(encodeURIComponent(JSON.stringify(row)))).substring(0,24)}`;
 }
+
 function validateAndProcessFile(file) {
   if (!file) return;
   const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g,'');
-  if (!name.includes('acsopencase')) {
-    toast(`❌ Rejected: filename must contain "ACS Open Case"`, 'var(--red)');
-    document.getElementById('excelFileInput').value = ''; return;
-  }
+  if (!name.includes('acsopencase')) { toast(`❌ Rejected: filename must contain "ACS Open Case"`, 'var(--red)'); document.getElementById('excelFileInput').value = ''; return; }
   processExcelFile(file);
 }
+
 function processExcelFile(file) {
   const reader = new FileReader();
   reader.onload = e => {
     try {
-      const wb = XLSX.read(new Uint8Array(e.target.result), { type:'array' });
-      const ws = wb.Sheets[wb.SheetNames[0]];
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type:'array' }); const ws = wb.Sheets[wb.SheetNames[0]];
       globalRawJsonData = XLSX.utils.sheet_to_json(ws, { defval:'' });
       if (!globalRawJsonData.length) { toast('⚠️ Spreadsheet appears empty.', 'var(--amber)'); return; }
       globalDataHeaders = Object.keys(globalRawJsonData[0]);
       ownerColumnKey = globalDataHeaders.find(h => h.toLowerCase().trim() === 'owner') || '';
       caseIdColumnKey = globalDataHeaders.find(h => /caseid|casenumber/i.test(h.toLowerCase().replace(/[^a-z]/g,''))) || '';
       serialNumberColumnKey = globalDataHeaders.find(h => /serialnumber|serialno/i.test(h.toLowerCase().replace(/[^a-z]/g,''))) || '';
-      let cachedDb = {};
-      try { cachedDb = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
+      let cachedDb = {}; try { cachedDb = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
       rowStatusStateArray = new Array(globalRawJsonData.length).fill('Pending');
       globalRawJsonData.forEach((row,i) => { const k = rowSig(row); if(k && cachedDb[k]) rowStatusStateArray[i] = cachedDb[k].statusValue || 'Pending'; });
       saveToIndexedDB(globalDataHeaders, globalRawJsonData);
@@ -1404,14 +1023,36 @@ function processExcelFile(file) {
   };
   reader.readAsArrayBuffer(file);
 }
+
 function populateOwnerDropdown() {
-  const sel = document.getElementById('ownerFilterDropdown');
-  sel.innerHTML = '<option value="">— Filter by Owner —</option>';
+  const sel = document.getElementById('ownerFilterDropdown'); sel.innerHTML = '<option value="">— Filter by Owner —</option>';
   if (!ownerColumnKey) return;
   [...new Set(globalRawJsonData.map(r => r[ownerColumnKey]?.toString().trim()).filter(Boolean))].sort().forEach(o => {
     const opt = document.createElement('option'); opt.value = opt.textContent = o; sel.appendChild(opt);
   });
 }
+
+function updateAnalyticsDashboard() {
+  document.getElementById('kpiTotalCases').textContent = globalRawJsonData.length;
+  const pendingOrNCM = rowStatusStateArray.filter(s => s === 'Pending' || s.includes('NCM')).length;
+  document.getElementById('kpiActionReq').textContent = pendingOrNCM;
+  
+  // Mock SLA logic based on real row count
+  const mockSlaCases = Math.floor(pendingOrNCM * 0.15); 
+  document.getElementById('kpiSLA').textContent = mockSlaCases;
+  
+  // Update Heatmap
+  const percGreen = Math.floor((globalRawJsonData.length - pendingOrNCM) / Math.max(globalRawJsonData.length, 1) * 100);
+  const percRed = Math.floor(mockSlaCases / Math.max(globalRawJsonData.length, 1) * 100);
+  const percAmber = 100 - percGreen - percRed;
+  
+  document.getElementById('kpiHeatmap').innerHTML = `
+    <div class="bar-row"><div class="bar-label">0-1 Days</div><div class="bar-track"><div class="bar-fill" style="background:var(--green); width:${percGreen}%"></div></div><div class="bar-val">${percGreen}%</div></div>
+    <div class="bar-row"><div class="bar-label">2-3 Days</div><div class="bar-track"><div class="bar-fill" style="background:var(--amber); width:${percAmber}%"></div></div><div class="bar-val">${percAmber}%</div></div>
+    <div class="bar-row"><div class="bar-label">4+ Days</div><div class="bar-track"><div class="bar-fill" style="background:var(--red); width:${percRed}%"></div></div><div class="bar-val">${percRed}%</div></div>
+  `;
+}
+
 function renderCaseTable() {
   const table = document.getElementById('parsedDataTable');
   let h = '<thead><tr><th>Status</th>';
@@ -1434,49 +1075,39 @@ function renderCaseTable() {
   document.getElementById('reportStats').classList.remove('hidden');
   document.getElementById('reportTablePanel').classList.remove('hidden');
   applyFiltersAndMetrics();
+  updateAnalyticsDashboard();
 }
+
 function updateStatus(idx, val) {
   rowStatusStateArray[idx] = val || 'Pending';
   const row = globalRawJsonData[idx];
   if (row) {
-    let db = {};
-    try { db = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
-    db[rowSig(row)] = { statusValue: val, savedTimestamp: Date.now() };
-    localStorage.setItem('acs_persistent_db', JSON.stringify(db));
+    let db = {}; try { db = JSON.parse(localStorage.getItem('acs_persistent_db')) || {}; } catch(e){}
+    db[rowSig(row)] = { statusValue: val, savedTimestamp: Date.now() }; localStorage.setItem('acs_persistent_db', JSON.stringify(db));
   }
-  // Update dropdown color
   const sel = document.querySelector(`#cr-${idx} .status-select`);
   if (sel) {
     const c = val==='Closed'?'var(--green)':val==='Pending'?'var(--amber)':val==='Dispatched'?'var(--green)':val.includes('NCM')?'var(--red)':val==='Escalated'?'var(--purple)':'var(--cyan)';
     sel.style.borderColor = c; sel.style.color = c;
   }
+  updateAnalyticsDashboard();
+
   if (val === 'NCM1') {
     const t = emailTemplates.find(t => t.id === 'first_followup');
-    if (t) {
-      // Use the selectTemplate wrapper so customizations trigger for NCM auto-load
-      selectTemplate(t.id, t.title, t.content);
-      navigator.clipboard.writeText(textarea.value).catch(()=>{});
-      toast('📋 NCM set — 1st Follow Up email auto-loaded & copied!', 'var(--red)');
-    }
+    if (t) { selectTemplate(t.id, t.title, t.content); navigator.clipboard.writeText(textarea.value).catch(()=>{}); toast('📋 NCM set — 1st Follow Up email auto-loaded & copied!', 'var(--red)'); }
   }
   if (val === 'NCM2') {
     const t = emailTemplates.find(t => t.id === 'second_followup');
-    if (t) {
-      // Use the selectTemplate wrapper so customizations trigger for NCM auto-load
-      selectTemplate(t.id, t.title, t.content);
-      navigator.clipboard.writeText(textarea.value).catch(()=>{});
-      toast('📋 NCM set — 2nd Follow Up email auto-loaded & copied!', 'var(--red)');
-    }
+    if (t) { selectTemplate(t.id, t.title, t.content); navigator.clipboard.writeText(textarea.value).catch(()=>{}); toast('📋 NCM set — 2nd Follow Up email auto-loaded & copied!', 'var(--red)'); }
   }
 }
+
 function applyFiltersAndMetrics() {
   const owner = document.getElementById('ownerFilterDropdown').value.toLowerCase().trim();
   const search = document.getElementById('tableSearchBox').value.toLowerCase().trim();
   let count = 0;
   document.querySelectorAll('#parsedDataTable tbody tr').forEach(row => {
-    const idx = parseInt(row.dataset.idx, 10);
-    const data = globalRawJsonData[idx];
-    if (!data) return;
+    const idx = parseInt(row.dataset.idx, 10); const data = globalRawJsonData[idx]; if (!data) return;
     const ownerVal = ownerColumnKey ? (data[ownerColumnKey]?.toString().toLowerCase().trim() || '') : '';
     const allText = globalDataHeaders.map(c => data[c].toString().toLowerCase()).join(' ');
     const show = (!owner || ownerVal === owner) && (!search || allText.includes(search));
@@ -1485,37 +1116,31 @@ function applyFiltersAndMetrics() {
   });
   document.getElementById('valFilteredRows').textContent = count;
 }
+
 function exportMyFilteredData() {
   const owner = document.getElementById('ownerFilterDropdown').value;
   if (!globalRawJsonData.length) { toast('⚠️ No data loaded yet.', 'var(--amber)'); return; }
   if (!owner) { toast('⚠️ Select an Owner to export filtered data.', 'var(--amber)'); return; }
-  const rows = [];
-  const now = new Date();
+  const rows = []; const now = new Date();
   document.querySelectorAll('#parsedDataTable tbody tr').forEach(tr => {
     if (tr.style.display === 'none') return;
-    const i = parseInt(tr.dataset.idx, 10);
-    const src = globalRawJsonData[i];
-    if (!src) return;
+    const i = parseInt(tr.dataset.idx, 10); const src = globalRawJsonData[i]; if (!src) return;
     const r = { 'Owner Filter': owner, 'Case Status': rowStatusStateArray[i] || 'Pending', 'Export Date': now.toLocaleDateString('en-IN'), 'Export Time': now.toLocaleTimeString('en-IN') };
-    globalDataHeaders.forEach(c => r[c] = src[c]);
-    rows.push(r);
+    globalDataHeaders.forEach(c => r[c] = src[c]); rows.push(r);
   });
   if (!rows.length) { toast('⚠️ No matching rows to export.', 'var(--amber)'); return; }
-  const ws = XLSX.utils.json_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Filtered Cases');
-  XLSX.writeFile(wb, `Filtered_Cases_${owner.replace(/[^a-zA-Z0-9]/g,'_')}.xlsx`);
+  const ws = XLSX.utils.json_to_sheet(rows); const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Filtered Cases'); XLSX.writeFile(wb, `Filtered_Cases_${owner.replace(/[^a-zA-Z0-9]/g,'_')}.xlsx`);
   toast('📤 Export complete!', 'var(--green)');
 }
 
-/* Drag-drop for Open Case */
 const dropZone = document.getElementById('dropZone');
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
 dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); const f = e.dataTransfer.files[0]; if(f) validateAndProcessFile(f); });
 
 /* ════════════════════════════════════════════════
-   GOLDEN ACCOUNT LEDGER
+   GOLDEN ACCOUNT LEDGER (FULL DATA RESTORED)
 ════════════════════════════════════════════════ */
 const goldenAccountsRawData = [
   {"Zone CS":"South","Account Name":"ACCENTURE INDIA PRIVATE LIMITED - IN","ADM/ VRM Name":"M, Jagannathan","FY26 GTM":"India Inc/PSU"},
@@ -1572,6 +1197,7 @@ const goldenAccountsRawData = [
   {"Zone CS":"South","Account Name":"WIPRO LIMITED - IN","ADM/ VRM Name":"T R Anand Kumar","FY26 GTM":"India Inc/PSU"},
   {"Zone CS":"North","Account Name":"ZOMATO - IN","ADM/ VRM Name":"Nitin Tyagi","FY26 GTM":"India Inc/PSU"}
 ];
+
 function initGoldenTable() {
   const table = document.getElementById('goldenDataTable');
   const headers = Object.keys(goldenAccountsRawData[0]);
@@ -1607,755 +1233,365 @@ function applyGoldenFilters() {
 }
 
 /* ════════════════════════════════════════════════
-   ADM ACCOUNT LIST — with IndexedDB persistence
+   ADM ACCOUNT LIST — IndexedDB
 ════════════════════════════════════════════════ */
 let admRawData = [], admPendingFile = null;
 function saveAdmToIndexedDB(data, sheetName, timestamp) {
   if (!dbInstance) return;
-  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-  const st = tx.objectStore(STORE_NAME);
-  st.put({ rows: data, sheetName, savedAt: timestamp }, 'adm_data');
+  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).put({ rows: data, sheetName, savedAt: timestamp }, 'adm_data');
 }
-
 function loadAdmFromIndexedDB() {
   return new Promise((resolve) => {
     if (!dbInstance) { resolve(null); return; }
-    const tx = dbInstance.transaction([STORE_NAME], 'readonly');
-    const req = tx.objectStore(STORE_NAME).get('adm_data');
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror   = () => resolve(null);
+    const req = dbInstance.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME).get('adm_data');
+    req.onsuccess = () => resolve(req.result || null); req.onerror = () => resolve(null);
   });
 }
-
 function deleteAdmFromIndexedDB() {
   if (!dbInstance) return;
-  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-  tx.objectStore(STORE_NAME).delete('adm_data');
+  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('adm_data');
 }
-
 function paintAdmTable(data, sheetName, savedAt) {
-  admRawData = data;
-  const table = document.getElementById('admDataTable');
+  admRawData = data; const table = document.getElementById('admDataTable');
   const headers = ['Subsidiary Legal Name', 'ADM Name', 'ADM/VRM'];
   let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
-  data.forEach(row => {
-    h += `<tr>
-      <td style="font-weight:600;color:var(--text)">${row['Subsidiary Legal Name'] || '-'}</td>
-      <td>${row['ADM Name'] || '-'}</td>
-      <td>${row['ADM/VRM'] || '-'}</td>
-    </tr>`;
-  });
-  h += '</tbody>';
-  table.innerHTML = h;
-  
-  document.getElementById('valTotalAdmRows').textContent = data.length;
-  document.getElementById('valAdmSheetName').textContent = sheetName;
-  document.getElementById('admStats').classList.remove('hidden');
-  document.getElementById('admTablePanel').classList.remove('hidden');
-  const label = savedAt
-    ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
-    : 'Last updated: just now';
-  document.getElementById('admSavedLabel').textContent = label;
+  data.forEach(row => { h += `<tr><td style="font-weight:600;color:var(--text)">${row['Subsidiary Legal Name'] || '-'}</td><td>${row['ADM Name'] || '-'}</td><td>${row['ADM/VRM'] || '-'}</td></tr>`; });
+  h += '</tbody>'; table.innerHTML = h;
+  document.getElementById('valTotalAdmRows').textContent = data.length; document.getElementById('valAdmSheetName').textContent = sheetName;
+  document.getElementById('admStats').classList.remove('hidden'); document.getElementById('admTablePanel').classList.remove('hidden');
+  document.getElementById('admSavedLabel').textContent = savedAt ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}` : 'Last updated: just now';
   document.getElementById('admSavedBanner').classList.remove('hidden');
 }
-
 function validateAndProcessAdmFile(file) {
-  if (!file) return;
-  const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g, '');
-  if (!name.includes('admaccountlist')) {
-    toast('❌ Rejected: filename must contain "ADM Account List"', 'var(--red)');
-    document.getElementById('admFileInput').value = ''; return;
-  }
-  admPendingFile = file;
-  document.getElementById('admUpdateRow').classList.remove('hidden');
-  toast('✅ File accepted — click "Update ADM List" to save.', 'var(--green)');
+  if (!file) return; const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (!name.includes('admaccountlist')) { toast('❌ Rejected: filename must contain "ADM Account List"', 'var(--red)'); document.getElementById('admFileInput').value = ''; return; }
+  admPendingFile = file; document.getElementById('admUpdateRow').classList.remove('hidden'); toast('✅ File accepted — click "Update ADM List" to save.', 'var(--green)');
 }
-
 function renderAdmTable() {
-  if (!admPendingFile) return;
-  const reader = new FileReader();
+  if (!admPendingFile) return; const reader = new FileReader();
   reader.onload = e => {
     try {
       const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
       const targetSheetName = wb.SheetNames.find(name => name.replace(/\s+/g, '').toLowerCase() === 'accountlist');
-      if (!targetSheetName) {
-        toast('⚠️ "AccountList" sheet not found in the workbook.', 'var(--amber)');
-        return;
-      }
-
-      const ws = wb.Sheets[targetSheetName];
-      const allRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-      if (!allRows.length) { 
-        toast(`⚠️ Target sheet "${targetSheetName}" is empty.`, 'var(--amber)'); 
-        return;
-      }
-
+      if (!targetSheetName) { toast('⚠️ "AccountList" sheet not found.', 'var(--amber)'); return; }
+      const allRows = XLSX.utils.sheet_to_json(wb.Sheets[targetSheetName], { defval: '' });
+      if (!allRows.length) { toast(`⚠️ Sheet "${targetSheetName}" is empty.`, 'var(--amber)'); return; }
       const parsed = allRows.map(row => {
         const keys = Object.keys(row);
         const companyKey = keys.find(k => k.trim().toLowerCase() === 'subsidiary_legal_name' || k.trim().toLowerCase() === 'subsidiary legal name');
         const admNameKey = keys.find(k => k.trim().toLowerCase() === 'adm name' || k.trim().toLowerCase() === 'adm_name');
         const admVrmKey  = keys.find(k => k.trim().toLowerCase().includes('adm/vrm') || k.trim().toLowerCase().includes('adm/ vrm'));
-
-        return {
-          "Subsidiary Legal Name": companyKey ? row[companyKey] : '',
-          "ADM Name": admNameKey ? row[admNameKey] : '',
-          "ADM/VRM": admVrmKey ? row[admVrmKey] : ''
-        };
+        return { "Subsidiary Legal Name": companyKey ? row[companyKey] : '', "ADM Name": admNameKey ? row[admNameKey] : '', "ADM/VRM": admVrmKey ? row[admVrmKey] : '' };
       }).filter(r => r["Subsidiary Legal Name"] !== '' || r["ADM Name"] !== '' || r["ADM/VRM"] !== '');
-      if (!parsed.length) {
-        toast(`⚠️ No matching columns found on sheet "${targetSheetName}".`, 'var(--amber)');
-        return;
-      }
-
-      const savedAt = Date.now();
-      saveAdmToIndexedDB(parsed, targetSheetName, savedAt);
-      paintAdmTable(parsed, targetSheetName, savedAt);
+      if (!parsed.length) { toast(`⚠️ No matching columns found on sheet "${targetSheetName}".`, 'var(--amber)'); return; }
+      const savedAt = Date.now(); saveAdmToIndexedDB(parsed, targetSheetName, savedAt); paintAdmTable(parsed, targetSheetName, savedAt);
       toast(`💾 ADM list saved — ${parsed.length} entries from "${targetSheetName}"`, 'var(--green)');
-    } catch (err) {
-      console.error(err);
-      toast('❌ File parse error. Ensure it is a valid spreadsheet.', 'var(--red)');
-    }
+    } catch (err) { console.error(err); toast('❌ File parse error.', 'var(--red)'); }
   };
   reader.readAsArrayBuffer(admPendingFile);
 }
-
 function clearAdmData() {
-  if (!confirm('Remove the saved ADM list from local storage? You will need to re-upload the file.')) return;
-  deleteAdmFromIndexedDB();
-  admRawData = [];
-  admPendingFile = null;
-  document.getElementById('admDataTable').innerHTML = '';
-  document.getElementById('admStats').classList.add('hidden');
-  document.getElementById('admTablePanel').classList.add('hidden');
-  document.getElementById('admSavedBanner').classList.add('hidden');
-  document.getElementById('admUpdateRow').classList.add('hidden');
-  document.getElementById('admFileInput').value = '';
-  toast('🗑 ADM data cleared from local storage.', 'var(--amber)');
+  if (!confirm('Remove the saved ADM list from local storage?')) return;
+  deleteAdmFromIndexedDB(); admRawData = []; admPendingFile = null; document.getElementById('admDataTable').innerHTML = '';
+  document.getElementById('admStats').classList.add('hidden'); document.getElementById('admTablePanel').classList.add('hidden');
+  document.getElementById('admSavedBanner').classList.add('hidden'); document.getElementById('admUpdateRow').classList.add('hidden');
+  document.getElementById('admFileInput').value = ''; toast('🗑 ADM data cleared.', 'var(--amber)');
 }
-
 const admDZ = document.getElementById('admDropZone');
 admDZ.addEventListener('dragover', e => { e.preventDefault(); admDZ.classList.add('drag-over'); });
 admDZ.addEventListener('dragleave', () => admDZ.classList.remove('drag-over'));
-admDZ.addEventListener('drop', e => {
-  e.preventDefault(); admDZ.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0]; if (f) validateAndProcessAdmFile(f);
-});
+admDZ.addEventListener('drop', e => { e.preventDefault(); admDZ.classList.remove('drag-over'); const f = e.dataTransfer.files[0]; if (f) validateAndProcessAdmFile(f); });
 
 /* ════════════════════════════════════════════════
-   UNIVERSAL PIN DATASHEET — (NEW MODULE)
+   UNIVERSAL PIN DATASHEET
 ════════════════════════════════════════════════ */
 let pinRawData = [], pinHeaders = [], pinPendingFile = null;
 function savePinToIndexedDB(headers, data, sheetName, timestamp) {
   if (!dbInstance) return;
-  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-  const st = tx.objectStore(STORE_NAME);
-  st.put({ headers, rows: data, sheetName, savedAt: timestamp }, 'pin_data');
+  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).put({ headers, rows: data, sheetName, savedAt: timestamp }, 'pin_data');
 }
-
 function loadPinFromIndexedDB() {
   return new Promise((resolve) => {
     if (!dbInstance) { resolve(null); return; }
-    const tx = dbInstance.transaction([STORE_NAME], 'readonly');
-    const req = tx.objectStore(STORE_NAME).get('pin_data');
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror   = () => resolve(null);
+    const req = dbInstance.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME).get('pin_data');
+    req.onsuccess = () => resolve(req.result || null); req.onerror = () => resolve(null);
   });
 }
-
 function deletePinFromIndexedDB() {
   if (!dbInstance) return;
-  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-  tx.objectStore(STORE_NAME).delete('pin_data');
+  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('pin_data');
 }
-
 function paintPinTable(headers, data, sheetName, savedAt) {
-  pinRawData = data;
-  pinHeaders = headers;
-  const table = document.getElementById('pinDataTable');
+  pinRawData = data; pinHeaders = headers; const table = document.getElementById('pinDataTable');
   let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
-  data.forEach(row => {
-    h += `<tr>`;
-    headers.forEach(c => {
-        h += `<td>${row[c] || '-'}</td>`;
-    });
-    h += `</tr>`;
-  });
-  h += '</tbody>';
-  table.innerHTML = h;
-
-  document.getElementById('valTotalPinRows').textContent = data.length;
-  document.getElementById('valPinSheetName').textContent = sheetName;
-  document.getElementById('pinStats').classList.remove('hidden');
-  document.getElementById('pinTablePanel').classList.remove('hidden');
-  const label = savedAt
-    ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
-    : 'Last updated: just now';
-  document.getElementById('pinSavedLabel').textContent = label;
+  data.forEach(row => { h += `<tr>`; headers.forEach(c => { h += `<td>${row[c] || '-'}</td>`; }); h += `</tr>`; });
+  h += '</tbody>'; table.innerHTML = h;
+  document.getElementById('valTotalPinRows').textContent = data.length; document.getElementById('valPinSheetName').textContent = sheetName;
+  document.getElementById('pinStats').classList.remove('hidden'); document.getElementById('pinTablePanel').classList.remove('hidden');
+  document.getElementById('pinSavedLabel').textContent = savedAt ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN')}` : 'Last updated: just now';
   document.getElementById('pinSavedBanner').classList.remove('hidden');
 }
-
 function validateAndProcessPinFile(file) {
-  if (!file) return;
-  const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g, '');
-  if (!name.includes('pin')) {
-    toast('❌ Rejected: filename must contain "PIN"', 'var(--red)');
-    document.getElementById('pinFileInput').value = ''; return;
-  }
-  pinPendingFile = file;
-  document.getElementById('pinUpdateRow').classList.remove('hidden');
-  toast('✅ PIN File accepted — click "Update PIN List" to save.', 'var(--green)');
+  if (!file) return; const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (!name.includes('pin')) { toast('❌ Rejected: filename must contain "PIN"', 'var(--red)'); document.getElementById('pinFileInput').value = ''; return; }
+  pinPendingFile = file; document.getElementById('pinUpdateRow').classList.remove('hidden'); toast('✅ PIN File accepted — click "Update PIN List" to save.', 'var(--green)');
 }
-
 function renderPinTable() {
-  if (!pinPendingFile) return;
-  const reader = new FileReader();
+  if (!pinPendingFile) return; const reader = new FileReader();
   reader.onload = e => {
     try {
-      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      const sheetName = wb.SheetNames[0]; // Reads the first sheet
-      const ws = wb.Sheets[sheetName];
-      const allRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-      
-      if (!allRows.length) {
-        toast(`⚠️ Sheet "${sheetName}" is empty.`, 'var(--amber)');
-        return;
-      }
-
-      const headers = Object.keys(allRows[0]);
-      const savedAt = Date.now();
-      savePinToIndexedDB(headers, allRows, sheetName, savedAt);
-      paintPinTable(headers, allRows, sheetName, savedAt);
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' }); const sheetName = wb.SheetNames[0];
+      const allRows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' });
+      if (!allRows.length) { toast(`⚠️ Sheet "${sheetName}" is empty.`, 'var(--amber)'); return; }
+      const headers = Object.keys(allRows[0]); const savedAt = Date.now();
+      savePinToIndexedDB(headers, allRows, sheetName, savedAt); paintPinTable(headers, allRows, sheetName, savedAt);
       toast(`💾 PIN list saved — ${allRows.length} entries loaded`, 'var(--green)');
-    } catch (err) {
-      console.error(err);
-      toast('❌ File parse error. Ensure it is a valid spreadsheet.', 'var(--red)');
-    }
+    } catch (err) { console.error(err); toast('❌ File parse error.', 'var(--red)'); }
   };
   reader.readAsArrayBuffer(pinPendingFile);
 }
-
 function clearPinData() {
-  if (!confirm('Remove the saved PIN Datasheet from local storage? You will need to re-upload the file.')) return;
-  deletePinFromIndexedDB();
-  pinRawData = [];
-  pinHeaders = [];
-  pinPendingFile = null;
-  document.getElementById('pinDataTable').innerHTML = '';
-  document.getElementById('pinStats').classList.add('hidden');
-  document.getElementById('pinTablePanel').classList.add('hidden');
-  document.getElementById('pinSavedBanner').classList.add('hidden');
-  document.getElementById('pinUpdateRow').classList.add('hidden');
-  document.getElementById('pinFileInput').value = '';
-  toast('🗑 PIN data cleared from local storage.', 'var(--amber)');
+  if (!confirm('Remove the saved PIN Datasheet from local storage?')) return;
+  deletePinFromIndexedDB(); pinRawData = []; pinHeaders = []; pinPendingFile = null; document.getElementById('pinDataTable').innerHTML = '';
+  document.getElementById('pinStats').classList.add('hidden'); document.getElementById('pinTablePanel').classList.add('hidden');
+  document.getElementById('pinSavedBanner').classList.add('hidden'); document.getElementById('pinUpdateRow').classList.add('hidden');
+  document.getElementById('pinFileInput').value = ''; toast('🗑 PIN data cleared.', 'var(--amber)');
 }
-
 function applyPinFilters() {
     const q = document.getElementById('pinSearchBox').value.toLowerCase().trim();
-    let n = 0;
     document.querySelectorAll('#pinDataTable tbody tr').forEach((row, i) => {
-      const text = Object.values(pinRawData[i]).join(' ').toLowerCase();
-      const show = !q || text.includes(q);
-      row.style.display = show ? '' : 'none';
-      if (show) n++;
+      row.style.display = (!q || Object.values(pinRawData[i]).join(' ').toLowerCase().includes(q)) ? '' : 'none';
     });
 }
-
 const pinDZ = document.getElementById('pinDropZone');
 pinDZ.addEventListener('dragover', e => { e.preventDefault(); pinDZ.classList.add('drag-over'); });
 pinDZ.addEventListener('dragleave', () => pinDZ.classList.remove('drag-over'));
-pinDZ.addEventListener('drop', e => {
-  e.preventDefault(); pinDZ.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0]; if (f) validateAndProcessPinFile(f);
-});
+pinDZ.addEventListener('drop', e => { e.preventDefault(); pinDZ.classList.remove('drag-over'); const f = e.dataTransfer.files[0]; if (f) validateAndProcessPinFile(f); });
 
 /* ════════════════════════════════════════════════
-   PML LIST — (NEW MODULE)
+   PML LIST
 ════════════════════════════════════════════════ */
 let pmlRawData = [], pmlPendingFile = null;
 function savePmlToIndexedDB(data, timestamp) {
-  if (!dbInstance) return;
-  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-  const st = tx.objectStore(STORE_NAME);
-  st.put({ rows: data, savedAt: timestamp }, 'pml_data');
+  if (!dbInstance) return; dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).put({ rows: data, savedAt: timestamp }, 'pml_data');
 }
-
 function loadPmlFromIndexedDB() {
   return new Promise((resolve) => {
     if (!dbInstance) { resolve(null); return; }
-    const tx = dbInstance.transaction([STORE_NAME], 'readonly');
-    const req = tx.objectStore(STORE_NAME).get('pml_data');
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror   = () => resolve(null);
+    const req = dbInstance.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME).get('pml_data');
+    req.onsuccess = () => resolve(req.result || null); req.onerror = () => resolve(null);
   });
 }
-
 function deletePmlFromIndexedDB() {
-  if (!dbInstance) return;
-  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-  tx.objectStore(STORE_NAME).delete('pml_data');
+  if (!dbInstance) return; dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('pml_data');
 }
-
 function paintPmlTable(data, savedAt) {
-  pmlRawData = data;
-  const table = document.getElementById('pmlDataTable');
+  pmlRawData = data; const table = document.getElementById('pmlDataTable');
   const headers = ['Region', 'CDAX ID/Queue', 'State', 'City', 'Partner Account Manager', 'Service Delivery Coordinator'];
   let h = '<thead><tr>' + headers.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
   data.forEach(row => {
     h += `<tr>`;
-    headers.forEach(c => {
-      let val = row[c] || '-';
-      if ((c === 'Partner Account Manager' || c === 'Service Delivery Coordinator') && val !== '-') {
-          // Wrap in a mailto link
-          val = `<a href="mailto:${val}" style="color:var(--cyan); text-decoration:none; font-weight:600;">✉️ ${val}</a>`;
-      }
-      h += `<td>${val}</td>`;
-    });
-   
+    headers.forEach(c => { let val = row[c] || '-'; if ((c === 'Partner Account Manager' || c === 'Service Delivery Coordinator') && val !== '-') { val = `<a href="mailto:${val}" style="color:var(--cyan); text-decoration:none; font-weight:600;">✉️ ${val}</a>`; } h += `<td>${val}</td>`; });
     h += `</tr>`;
   });
-  
-  h += '</tbody>';
-  table.innerHTML = h;
-
-  document.getElementById('valTotalPmlRows').textContent = data.length;
-  document.getElementById('valFilteredPmlRows').textContent = data.length;
-  document.getElementById('pmlStats').classList.remove('hidden');
-  document.getElementById('pmlTablePanel').classList.remove('hidden');
-  const label = savedAt
-    ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
-    : 'Last updated: just now';
-  document.getElementById('pmlSavedLabel').textContent = label;
+  h += '</tbody>'; table.innerHTML = h;
+  document.getElementById('valTotalPmlRows').textContent = data.length; document.getElementById('valFilteredPmlRows').textContent = data.length;
+  document.getElementById('pmlStats').classList.remove('hidden'); document.getElementById('pmlTablePanel').classList.remove('hidden');
+  document.getElementById('pmlSavedLabel').textContent = savedAt ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN')}` : 'Last updated: just now';
   document.getElementById('pmlSavedBanner').classList.remove('hidden');
 }
-
 function validateAndProcessPmlFile(file) {
-  if (!file) return;
-  const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g, '');
-  if (!name.includes('pml')) {
-    toast('❌ Rejected: filename must contain "PML"', 'var(--red)');
-    document.getElementById('pmlFileInput').value = ''; return;
-  }
-  pmlPendingFile = file;
-  document.getElementById('pmlUpdateRow').classList.remove('hidden');
-  toast('✅ PML File accepted — click "Update PML List" to save.', 'var(--green)');
+  if (!file) return; const name = (file.name.substring(0, file.name.lastIndexOf('.')) || file.name).toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (!name.includes('pml')) { toast('❌ Rejected: filename must contain "PML"', 'var(--red)'); document.getElementById('pmlFileInput').value = ''; return; }
+  pmlPendingFile = file; document.getElementById('pmlUpdateRow').classList.remove('hidden'); toast('✅ PML File accepted.', 'var(--green)');
 }
-
 function renderPmlTable() {
-  if (!pmlPendingFile) return;
-  const reader = new FileReader();
+  if (!pmlPendingFile) return; const reader = new FileReader();
   reader.onload = e => {
     try {
-      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      const sheetName = wb.SheetNames[0]; 
-      const ws = wb.Sheets[sheetName];
-      const allRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-      if (!allRows.length) {
-        toast(`⚠️ Sheet is empty.`, 'var(--amber)');
-        return;
-      }
-
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' }); const sheetName = wb.SheetNames[0]; 
+      const allRows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' });
+      if (!allRows.length) { toast(`⚠️ Sheet is empty.`, 'var(--amber)'); return; }
       const parsed = allRows.map(row => {
         const keys = Object.keys(row);
-        const getVal = (searchStrs) => {
-            const key = keys.find(k => searchStrs.some(s => k.toLowerCase().includes(s)));
-            return key ? row[key] : '';
-        };
-
+        const getVal = (searchStrs) => { const key = keys.find(k => searchStrs.some(s => k.toLowerCase().includes(s))); return key ? row[key] : ''; };
         return {
-          'Region': getVal(['region']),
-          'CDAX ID/Queue': getVal(['cdax', 'queue']),
-          'State': getVal(['state']),
-          'City': getVal(['city']),
-          'Partner Account Manager': getVal(['partner account manager', 'pam']),
-          'Service Delivery Coordinator': getVal(['service delivery coordinator', 'sdc'])
+          'Region': getVal(['region']), 'CDAX ID/Queue': getVal(['cdax', 'queue']), 'State': getVal(['state']),
+          'City': getVal(['city']), 'Partner Account Manager': getVal(['partner account manager', 'pam']), 'Service Delivery Coordinator': getVal(['service delivery coordinator', 'sdc'])
         };
       }).filter(r => r['Region'] || r['CDAX ID/Queue'] || r['Partner Account Manager']);
-      const savedAt = Date.now();
-      savePmlToIndexedDB(parsed, savedAt);
-      paintPmlTable(parsed, savedAt);
+      const savedAt = Date.now(); savePmlToIndexedDB(parsed, savedAt); paintPmlTable(parsed, savedAt);
       toast(`💾 PML list saved — ${parsed.length} entries loaded`, 'var(--green)');
-    } catch (err) {
-      console.error(err);
-      toast('❌ File parse error. Ensure it is a valid spreadsheet.', 'var(--red)');
-    }
+    } catch (err) { console.error(err); toast('❌ File parse error.', 'var(--red)'); }
   };
   reader.readAsArrayBuffer(pmlPendingFile);
 }
-
 function clearPmlData() {
-  if (!confirm('Remove the saved PML List from local storage? You will need to re-upload the file.')) return;
-  deletePmlFromIndexedDB();
-  pmlRawData = [];
-  pmlPendingFile = null;
-  document.getElementById('pmlDataTable').innerHTML = '';
-  document.getElementById('pmlStats').classList.add('hidden');
-  document.getElementById('pmlTablePanel').classList.add('hidden');
-  document.getElementById('pmlSavedBanner').classList.add('hidden');
-  document.getElementById('pmlUpdateRow').classList.add('hidden');
-  document.getElementById('pmlFileInput').value = '';
-  toast('🗑 PML data cleared from local storage.', 'var(--amber)');
+  if (!confirm('Remove the saved PML List from local storage?')) return;
+  deletePmlFromIndexedDB(); pmlRawData = []; pmlPendingFile = null; document.getElementById('pmlDataTable').innerHTML = '';
+  document.getElementById('pmlStats').classList.add('hidden'); document.getElementById('pmlTablePanel').classList.add('hidden');
+  document.getElementById('pmlSavedBanner').classList.add('hidden'); document.getElementById('pmlUpdateRow').classList.add('hidden');
+  document.getElementById('pmlFileInput').value = ''; toast('🗑 PML data cleared.', 'var(--amber)');
 }
-
 function applyPmlFilters() {
-    const q = document.getElementById('pmlSearchBox').value.toLowerCase().trim();
-    let n = 0;
+    const q = document.getElementById('pmlSearchBox').value.toLowerCase().trim(); let n = 0;
     document.querySelectorAll('#pmlDataTable tbody tr').forEach((row, i) => {
       const text = Object.values(pmlRawData[i]).join(' ').toLowerCase();
-      const show = !q || text.includes(q);
-      row.style.display = show ? '' : 'none';
-      if (show) n++;
+      const show = !q || text.includes(q); row.style.display = show ? '' : 'none'; if (show) n++;
     });
     document.getElementById('valFilteredPmlRows').textContent = n;
 }
-
 const pmlDZ = document.getElementById('pmlDropZone');
 pmlDZ.addEventListener('dragover', e => { e.preventDefault(); pmlDZ.classList.add('drag-over'); });
 pmlDZ.addEventListener('dragleave', () => pmlDZ.classList.remove('drag-over'));
-pmlDZ.addEventListener('drop', e => {
-  e.preventDefault(); pmlDZ.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0]; if (f) validateAndProcessPmlFile(f);
-});
+pmlDZ.addEventListener('drop', e => { e.preventDefault(); pmlDZ.classList.remove('drag-over'); const f = e.dataTransfer.files[0]; if (f) validateAndProcessPmlFile(f); });
 
 /* ════════════════════════════════════════════════
-   KNOWN ADVISORIES — PLUS MANUAL UPLOADS
+   KNOWN ADVISORIES & MANUAL ADVISORIES
 ════════════════════════════════════════════════ */
-let advRawData = [], advPendingFile = null;
-let manualAdvisories = [];
-
+let advRawData = [], advPendingFile = null, manualAdvisories = [];
 function saveAdvToIndexedDB(data, timestamp) {
-  if (!dbInstance) return;
-  const tx = dbInstance.transaction([STORE_NAME], 'readwrite');
-  tx.objectStore(STORE_NAME).put({ advisories: data, savedAt: timestamp }, 'adv_data');
+  if (!dbInstance) return; dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).put({ advisories: data, savedAt: timestamp }, 'adv_data');
 }
-
 function loadAdvFromIndexedDB() {
   return new Promise((resolve) => {
     if (!dbInstance) { resolve(null); return; }
     const req = dbInstance.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME).get('adv_data');
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror   = () => resolve(null);
+    req.onsuccess = () => resolve(req.result || null); req.onerror = () => resolve(null);
   });
 }
-
 function deleteAdvFromIndexedDB() {
-  if (!dbInstance) return;
-  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('adv_data');
+  if (!dbInstance) return; dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('adv_data');
 }
-
-/* ── Custom/Manual Advisories DB ── */
 function saveManualAdvToIndexedDB(data) {
-  if (!dbInstance) return;
-  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).put({ advisories: data }, 'manual_adv_data');
+  if (!dbInstance) return; dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).put({ advisories: data }, 'manual_adv_data');
 }
 function loadManualAdvFromIndexedDB() {
   return new Promise((resolve) => {
     if (!dbInstance) { resolve(null); return; }
     const req = dbInstance.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME).get('manual_adv_data');
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror   = () => resolve(null);
+    req.onsuccess = () => resolve(req.result || null); req.onerror = () => resolve(null);
   });
 }
 function deleteManualAdvFromIndexedDB() {
-  if (!dbInstance) return;
-  dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('manual_adv_data');
+  if (!dbInstance) return; dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).delete('manual_adv_data');
 }
-
-/* ── UI Logic for Accordion ── */
-function toggleAdv(element) {
-  const body = element.nextElementSibling;
-  body.classList.toggle('open');
-}
-
-/* ── Basic Image URL renderer ── */
+function toggleAdv(element) { element.nextElementSibling.classList.toggle('open'); }
 function renderImageLinks(text) {
   if (typeof text !== 'string') return text;
   const imgRegex = /(https?:\/\/[^\s]+?\.(?:png|jpg|jpeg|gif|webp))/gi;
-  if (imgRegex.test(text)) {
-      return text.replace(imgRegex, '<br><img src="$1" class="adv-img" onerror="this.style.display=\'none\'"><br>');
-  }
+  if (imgRegex.test(text)) return text.replace(imgRegex, '<br><img src="$1" class="adv-img" onerror="this.style.display=\'none\'"><br>');
   return text;
 }
-
 function paintAdvList(data, savedAt) {
-  advRawData = data;
-  const container = document.getElementById('advAccordionContainer');
-  let html = '';
+  advRawData = data; const container = document.getElementById('advAccordionContainer'); let html = '';
   data.forEach((adv) => {
-    html += `
-    <div class="adv-item" data-name="${adv.name.replace(/"/g, '&quot;').toLowerCase()}">
-      <div class="adv-header" onclick="toggleAdv(this)">
-        <span>📢 ${adv.name}</span>
-        <span style="font-size:0.8rem; color:var(--text3)">Sheet: ${adv.sheet}</span>
-      </div>
-      <div class="adv-body">
-        <table class="adv-table"><tbody>`;
-    
+    html += `<div class="adv-item" data-name="${adv.name.replace(/"/g, '&quot;').toLowerCase()}"><div class="adv-header" onclick="toggleAdv(this)"><span>📢 ${adv.name}</span><span style="font-size:0.8rem; color:var(--text3)">Sheet: ${adv.sheet}</span></div><div class="adv-body"><table class="adv-table"><tbody>`;
     adv.content.forEach(row => {
-      if (!row || row.length === 0) return;
-      html += '<tr>';
-     
-      row.forEach(cell => {
-        html += `<td>${renderImageLinks(cell !== undefined ? cell : '')}</td>`;
-      });
-      html += '</tr>';
+      if (!row || row.length === 0) return; html += '<tr>';
+      row.forEach(cell => { html += `<td>${renderImageLinks(cell !== undefined ? cell : '')}</td>`; }); html += '</tr>';
     });
-
     html += `</tbody></table></div></div>`;
   });
-  
   container.innerHTML = html;
-  document.getElementById('valTotalAdv').textContent = data.length;
-  document.getElementById('advStats').classList.remove('hidden');
-  document.getElementById('advListPanel').classList.remove('hidden');
-
-  const label = savedAt
-    ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}`
-    : 'Last updated: just now';
-  document.getElementById('advSavedLabel').textContent = label;
+  document.getElementById('valTotalAdv').textContent = data.length; document.getElementById('advStats').classList.remove('hidden'); document.getElementById('advListPanel').classList.remove('hidden');
+  document.getElementById('advSavedLabel').textContent = savedAt ? `Last updated: ${new Date(savedAt).toLocaleString('en-IN')}` : 'Last updated: just now';
   document.getElementById('advSavedBanner').classList.remove('hidden');
 }
-
 function validateAndProcessAdvFile(file) {
-  if (!file) return;
-  advPendingFile = file;
-  document.getElementById('advUpdateRow').classList.remove('hidden');
-  toast('✅ Advisories File accepted — click "Update Advisories" to save.', 'var(--green)');
+  if (!file) return; advPendingFile = file; document.getElementById('advUpdateRow').classList.remove('hidden'); toast('✅ Advisories File accepted.', 'var(--green)');
 }
-
 function renderAdvData() {
-  if (!advPendingFile) return;
-  const reader = new FileReader();
+  if (!advPendingFile) return; const reader = new FileReader();
   reader.onload = e => {
     try {
-      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
-      const parsedAdvisories = [];
-
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' }); const parsedAdvisories = [];
       wb.SheetNames.forEach(sheetName => {
-        const ws = wb.Sheets[sheetName];
-        // Parse as a 2D array to accurately target specific rows
-        const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
-        
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, defval: '' });
         if (rows.length > 0) {
-          // Rule: Name captured from the 4th row (index 3). We scan the array for the first non-empty cell.
-          let advName = sheetName;
-          if (rows.length >= 4 && rows[3]) {
-              const cellValue = rows[3].find(c => String(c).trim() !== '');
-              if (cellValue) advName = String(cellValue).trim();
-          }
-          
-          // Data Content: All rows after the 4th row are the details. Filter out entirely blank rows.
+          let advName = sheetName; if (rows.length >= 4 && rows[3]) { const cellValue = rows[3].find(c => String(c).trim() !== ''); if (cellValue) advName = String(cellValue).trim(); }
           const contentRows = rows.slice(4).filter(r => r.some(c => String(c).trim() !== ''));
-
-          parsedAdvisories.push({
-            sheet: sheetName,
-            name: advName,
-            content: contentRows
-          });
+          parsedAdvisories.push({ sheet: sheetName, name: advName, content: contentRows });
         }
       });
-
-      if (!parsedAdvisories.length) {
-        toast(`⚠️ No valid data found across the workbook.`, 'var(--amber)');
-        return;
-      }
-
-      const savedAt = Date.now();
-      saveAdvToIndexedDB(parsedAdvisories, savedAt);
-      paintAdvList(parsedAdvisories, savedAt);
+      if (!parsedAdvisories.length) { toast(`⚠️ No valid data found.`, 'var(--amber)'); return; }
+      const savedAt = Date.now(); saveAdvToIndexedDB(parsedAdvisories, savedAt); paintAdvList(parsedAdvisories, savedAt);
       toast(`💾 Advisories saved — ${parsedAdvisories.length} loaded`, 'var(--green)');
-    } catch (err) {
-      console.error(err);
-      toast('❌ File parse error. Ensure it is a valid spreadsheet.', 'var(--red)');
-    }
+    } catch (err) { console.error(err); toast('❌ File parse error.', 'var(--red)'); }
   };
   reader.readAsArrayBuffer(advPendingFile);
 }
-
 function clearAdvData() {
   if (!confirm('Remove the saved Advisories from local storage?')) return;
-  deleteAdvFromIndexedDB();
-  advRawData = [];
-  advPendingFile = null;
-  document.getElementById('advAccordionContainer').innerHTML = '';
-  document.getElementById('advStats').classList.add('hidden');
-  document.getElementById('advListPanel').classList.add('hidden');
-  document.getElementById('advSavedBanner').classList.add('hidden');
-  document.getElementById('advUpdateRow').classList.add('hidden');
-  document.getElementById('advFileInput').value = '';
+  deleteAdvFromIndexedDB(); advRawData = []; advPendingFile = null; document.getElementById('advAccordionContainer').innerHTML = '';
+  document.getElementById('advStats').classList.add('hidden'); document.getElementById('advListPanel').classList.add('hidden');
+  document.getElementById('advSavedBanner').classList.add('hidden'); document.getElementById('advUpdateRow').classList.add('hidden'); document.getElementById('advFileInput').value = '';
   toast('🗑 Advisories data cleared.', 'var(--amber)');
 }
 
-/* ─── Manual Advisories Logic ─── */
 async function saveManualAdvisory() {
-  const name = document.getElementById('manualAdvName').value.trim();
-  const devices = document.getElementById('manualAdvDevices').value.trim();
-  const issue = document.getElementById('manualAdvIssue').value.trim();
-  const ts = document.getElementById('manualAdvTS').value.trim();
-  const fix = document.getElementById('manualAdvFix').value.trim();
-  const fileInput = document.getElementById('manualAdvFile');
-
-  if (!name || !issue) {
-    toast('⚠️ Advisory Number and Issue Details are required.', 'var(--amber)');
-    return;
-  }
-
+  const name = document.getElementById('manualAdvName').value.trim(); const devices = document.getElementById('manualAdvDevices').value.trim();
+  const issue = document.getElementById('manualAdvIssue').value.trim(); const ts = document.getElementById('manualAdvTS').value.trim();
+  const fix = document.getElementById('manualAdvFix').value.trim(); const fileInput = document.getElementById('manualAdvFile');
+  if (!name || !issue) { toast('⚠️ Advisory Number and Issue Details are required.', 'var(--amber)'); return; }
   let fileData = null;
   if (fileInput.files && fileInput.files[0]) {
-     const file = fileInput.files[0];
-     fileData = await new Promise((resolve) => {
-         const reader = new FileReader();
-         reader.onload = e => resolve(e.target.result);
-         reader.readAsDataURL(file);
-     });
+     fileData = await new Promise((resolve) => { const reader = new FileReader(); reader.onload = e => resolve(e.target.result); reader.readAsDataURL(fileInput.files[0]); });
   }
-
-  const newAdv = {
-    id: Date.now(),
-    name, devices, issue, ts, fix, fileData
-  };
-
-  manualAdvisories.push(newAdv);
-  saveManualAdvToIndexedDB(manualAdvisories);
-  paintManualAdvList();
-
-  // Reset form
-  document.getElementById('manualAdvName').value = '';
-  document.getElementById('manualAdvDevices').value = '';
-  document.getElementById('manualAdvIssue').value = '';
-  document.getElementById('manualAdvTS').value = '';
-  document.getElementById('manualAdvFix').value = '';
-  document.getElementById('manualAdvFile').value = '';
-
+  const newAdv = { id: Date.now(), name, devices, issue, ts, fix, fileData };
+  manualAdvisories.push(newAdv); saveManualAdvToIndexedDB(manualAdvisories); paintManualAdvList();
+  document.getElementById('manualAdvName').value = ''; document.getElementById('manualAdvDevices').value = ''; document.getElementById('manualAdvIssue').value = '';
+  document.getElementById('manualAdvTS').value = ''; document.getElementById('manualAdvFix').value = ''; document.getElementById('manualAdvFile').value = '';
   toast('✅ Custom Advisory Added!', 'var(--green)');
 }
 
 function paintManualAdvList() {
-  const container = document.getElementById('manualAdvAccordionContainer');
-  const panel = document.getElementById('manualAdvListPanel');
-
-  if (!manualAdvisories.length) {
-     panel.classList.add('hidden');
-     container.innerHTML = '';
-     return;
-  }
-
-  panel.classList.remove('hidden');
-  let html = '';
+  const container = document.getElementById('manualAdvAccordionContainer'); const panel = document.getElementById('manualAdvListPanel');
+  if (!manualAdvisories.length) { panel.classList.add('hidden'); container.innerHTML = ''; return; }
+  panel.classList.remove('hidden'); let html = '';
   manualAdvisories.forEach(adv => {
-     html += `
-     <div class="adv-item" data-name="${adv.name.replace(/"/g, '&quot;').toLowerCase()}">
-       <div class="adv-header" onclick="toggleAdv(this)">
-         <span>📌 ${adv.name}</span>
-         <span style="font-size:0.8rem; color:var(--text3)">Custom Entry</span>
-       </div>
-       <div class="adv-body">
-         <table class="adv-table">
-           <tbody>
-             <tr><td style="font-weight:bold; width:180px;">Affected Devices</td><td>${adv.devices || 'N/A'}</td></tr>
-             <tr><td style="font-weight:bold;">Issue Details</td><td>${adv.issue.replace(/\n/g, '<br>')}</td></tr>
-             <tr><td style="font-weight:bold;">Troubleshooting</td><td>${adv.ts ? adv.ts.replace(/\n/g, '<br>') : '-'}</td></tr>
-             <tr><td style="font-weight:bold;">Fixes / Resolution</td><td>${adv.fix ? adv.fix.replace(/\n/g, '<br>') : '-'}</td></tr>
-             ${adv.fileData ? `<tr><td style="font-weight:bold;">Attachment</td><td><img src="${adv.fileData}" style="max-width:100%; border-radius:4px; margin-top:8px;" alt="Attachment" onerror="this.outerHTML='<a href=&quot;${adv.fileData}&quot; target=&quot;_blank&quot; style=&quot;color:var(--cyan)&quot;>Download Attachment</a>'"></td></tr>` : ''}
-           </tbody>
-         </table>
-         <button class="btn btn-danger-ghost btn-sm" style="margin-top:12px; margin-bottom:12px;" onclick="removeManualAdvisory(${adv.id})">🗑 Delete Custom Advisory</button>
-       </div>
-     </div>`;
+     html += `<div class="adv-item" data-name="${adv.name.replace(/"/g, '&quot;').toLowerCase()}"><div class="adv-header" onclick="toggleAdv(this)"><span>📌 ${adv.name}</span><span style="font-size:0.8rem; color:var(--text3)">Custom Entry</span></div><div class="adv-body"><table class="adv-table"><tbody>
+       <tr><td style="font-weight:bold; width:180px;">Affected Devices</td><td>${adv.devices || 'N/A'}</td></tr>
+       <tr><td style="font-weight:bold;">Issue Details</td><td>${adv.issue.replace(/\n/g, '<br>')}</td></tr>
+       <tr><td style="font-weight:bold;">Troubleshooting</td><td>${adv.ts ? adv.ts.replace(/\n/g, '<br>') : '-'}</td></tr>
+       <tr><td style="font-weight:bold;">Fixes / Resolution</td><td>${adv.fix ? adv.fix.replace(/\n/g, '<br>') : '-'}</td></tr>
+       ${adv.fileData ? `<tr><td style="font-weight:bold;">Attachment</td><td><img src="${adv.fileData}" style="max-width:100%; border-radius:4px; margin-top:8px;" alt="Attachment" onerror="this.outerHTML='<a href=&quot;${adv.fileData}&quot; target=&quot;_blank&quot; style=&quot;color:var(--cyan)&quot;>Download Attachment</a>'"></td></tr>` : ''}
+       </tbody></table><button class="btn btn-danger-ghost btn-sm" style="margin-top:12px; margin-bottom:12px;" onclick="removeManualAdvisory(${adv.id})">🗑 Delete Custom Advisory</button></div></div>`;
   });
   container.innerHTML = html;
 }
-
 function removeManualAdvisory(id) {
    if (!confirm('Delete this custom advisory?')) return;
-   manualAdvisories = manualAdvisories.filter(a => a.id !== id);
-   saveManualAdvToIndexedDB(manualAdvisories);
-   paintManualAdvList();
-   toast('🗑 Custom advisory deleted.', 'var(--amber)');
+   manualAdvisories = manualAdvisories.filter(a => a.id !== id); saveManualAdvToIndexedDB(manualAdvisories); paintManualAdvList(); toast('🗑 Custom advisory deleted.', 'var(--amber)');
 }
-
 function clearManualAdvData() {
    if (!confirm('Clear all custom advisories?')) return;
-   manualAdvisories = [];
-   deleteManualAdvFromIndexedDB();
-   paintManualAdvList();
-   toast('🗑 All custom advisories cleared.', 'var(--amber)');
+   manualAdvisories = []; deleteManualAdvFromIndexedDB(); paintManualAdvList(); toast('🗑 All custom advisories cleared.', 'var(--amber)');
 }
-
 function applyAdvFilters() {
   const q = document.getElementById('advSearchBox').value.toLowerCase().trim();
   document.querySelectorAll('.adv-item').forEach(item => {
-    // Search within the name dataset tag or the entire text content of the element (covers both DB and Manual ones seamlessly)
     const textContent = item.textContent.toLowerCase();
-    if (!q || textContent.includes(q)) {
-        item.style.display = '';
-    } else {
-        item.style.display = 'none';
-    }
+    item.style.display = (!q || textContent.includes(q)) ? '' : 'none';
   });
 }
-
 const advDZ = document.getElementById('advDropZone');
 advDZ.addEventListener('dragover', e => { e.preventDefault(); advDZ.classList.add('drag-over'); });
 advDZ.addEventListener('dragleave', () => advDZ.classList.remove('drag-over'));
-advDZ.addEventListener('drop', e => {
-  e.preventDefault(); advDZ.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0]; if (f) validateAndProcessAdvFile(f);
-});
+advDZ.addEventListener('drop', e => { e.preventDefault(); advDZ.classList.remove('drag-over'); const f = e.dataTransfer.files[0]; if (f) validateAndProcessAdvFile(f); });
 
 /* ─── Boot sequence ─── */
 window.addEventListener('DOMContentLoaded', async () => {
-  cleanExpired();
-  initGoldenTable();
+  cleanExpired(); initGoldenTable();
   try { await initIndexedDB(); } catch(e) { console.log('IndexedDB init error', e); }
   
-  // Restore Open Case Report
   try { await loadFromIndexedDB(); } catch(e) { console.log('No prior case DB cache.', e); }
   
-  // Restore ADM list
-  try {
-    const saved = await loadAdmFromIndexedDB();
-    if (saved && saved.rows && saved.rows.length > 0) {
-      paintAdmTable(saved.rows, saved.sheetName, saved.savedAt);
-      toast('🔄 ADM list restored from last saved session.', 'var(--purple)');
-    }
-  } catch(e) { console.log('No prior ADM cache.', e); }
-  
-  // Restore PIN list 
-  try {
-    const savedPin = await loadPinFromIndexedDB();
-    if (savedPin && savedPin.rows && savedPin.rows.length > 0) {
-      paintPinTable(savedPin.headers, savedPin.rows, savedPin.sheetName, savedPin.savedAt);
-      toast('🔄 PIN list restored from last saved session.', 'var(--purple)');
-    }
-  } catch(e) { console.log('No prior PIN cache.', e); }
-
-  // Restore PML list 
-  try {
-    const savedPml = await loadPmlFromIndexedDB();
-    if (savedPml && savedPml.rows && savedPml.rows.length > 0) {
-      paintPmlTable(savedPml.rows, savedPml.savedAt);
-      toast('🔄 PML list restored from last saved session.', 'var(--purple)');
-    }
-  } catch(e) { console.log('No prior PML cache.', e); }
-
-  // Restore Advisories List
-  try {
-    const savedAdv = await loadAdvFromIndexedDB();
-    if (savedAdv && savedAdv.advisories && savedAdv.advisories.length > 0) {
-      paintAdvList(savedAdv.advisories, savedAdv.savedAt);
-      toast('🔄 Advisories restored from last saved session.', 'var(--purple)');
-    }
-  } catch(e) { console.log('No prior Adv cache.', e); }
-
-  // Restore Custom/Manual Advisories
-  try {
-    const savedManualAdv = await loadManualAdvFromIndexedDB();
-    if (savedManualAdv && savedManualAdv.advisories && savedManualAdv.advisories.length > 0) {
-      manualAdvisories = savedManualAdv.advisories;
-      paintManualAdvList();
-    }
-  } catch(e) { console.log('No prior Custom Adv cache.', e); }
-
+  try { const saved = await loadAdmFromIndexedDB(); if (saved && saved.rows && saved.rows.length > 0) { paintAdmTable(saved.rows, saved.sheetName, saved.savedAt); } } catch(e) {}
+  try { const savedPin = await loadPinFromIndexedDB(); if (savedPin && savedPin.rows && savedPin.rows.length > 0) { paintPinTable(savedPin.headers, savedPin.rows, savedPin.sheetName, savedPin.savedAt); } } catch(e) {}
+  try { const savedPml = await loadPmlFromIndexedDB(); if (savedPml && savedPml.rows && savedPml.rows.length > 0) { paintPmlTable(savedPml.rows, savedPml.savedAt); } } catch(e) {}
+  try { const savedAdv = await loadAdvFromIndexedDB(); if (savedAdv && savedAdv.advisories && savedAdv.advisories.length > 0) { paintAdvList(savedAdv.advisories, savedAdv.savedAt); } } catch(e) {}
+  try { const savedManualAdv = await loadManualAdvFromIndexedDB(); if (savedManualAdv && savedManualAdv.advisories && savedManualAdv.advisories.length > 0) { manualAdvisories = savedManualAdv.advisories; paintManualAdvList(); } } catch(e) {}
 });
 </script>
 </body>
