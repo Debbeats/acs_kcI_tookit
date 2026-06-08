@@ -147,7 +147,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .logout-btn-small:hover { color: var(--red); border-color: var(--red-dim); background: var(--red-dim); }
 
 /* ═══════════════════════════ MAIN CONTENT ═══════════════════════════ */
-.main-content { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+.main-content { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; position: relative; }
 
 /* ═══════════════════════════ TOP HEADER ═══════════════════════════ */
 .top-header { height: var(--header-h); background: rgba(var(--surface), 0.8); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
@@ -164,8 +164,38 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .icon-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border-bright); }
 .clock-chip { font-family: var(--mono); font-size: 0.85rem; color: var(--cyan); font-weight: 600; letter-spacing: 0.5px; }
 
+/* ═══════════════════════════ QA ANIMATED BANNER ═══════════════════════════ */
+.qa-banner-container {
+  position: fixed;
+  bottom: 0;
+  left: var(--sidebar-w);
+  right: 0;
+  height: 28px;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  z-index: 40; /* Below sidebar/headers, above general content */
+}
+.qa-banner-text {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  animation: marquee 20s linear infinite;
+}
+@keyframes marquee {
+  0% { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
+}
+
 /* ═══════════════════════════ PAGE BODY ═══════════════════════════ */
-.page-body { padding: 32px; flex: 1; animation: fadeUp 0.4s ease both; }
+/* Added extra bottom padding (50px) to prevent the banner from guarding content */
+.page-body { padding: 32px 32px 50px 32px; flex: 1; animation: fadeUp 0.4s ease both; }
 @keyframes fadeUp { 0%{opacity:0;transform:translateY(15px)} 100%{opacity:1;transform:none} }
 .tab-view { display: none; }
 .tab-view.active { display: block; animation: fadeUp 0.3s ease both; }
@@ -250,7 +280,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
 .cmd-res-item.selected .cmd-res-icon { background: var(--cyan); color: #fff; }
 
 /* ═══════════════════════════ TOAST ═══════════════════════════ */
-#toast { position: fixed; bottom: 32px; right: 32px; background: var(--surface); border: 1px solid var(--border-bright); border-left: 4px solid var(--cyan); padding: 16px 24px; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; color: var(--text); box-shadow: var(--shadow-lg); opacity: 0; transform: translateY(20px); pointer-events: none; transition: var(--transition); z-index: 999; }
+/* Raised slightly so the bottom QA banner doesn't overlap it */
+#toast { position: fixed; bottom: 44px; right: 32px; background: var(--surface); border: 1px solid var(--border-bright); border-left: 4px solid var(--cyan); padding: 16px 24px; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; color: var(--text); box-shadow: var(--shadow-lg); opacity: 0; transform: translateY(20px); pointer-events: none; transition: var(--transition); z-index: 999; }
 #toast.show { opacity: 1; transform: none; }
 
 /* Utility & Previous styles */
@@ -704,6 +735,11 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); min-
       </div>
 
     </div>
+    
+    <div class="qa-banner-container">
+      <div class="qa-banner-text">Did you use the QA codes today?</div>
+    </div>
+    
   </div>
 </div>
 <div id="toast"></div>
@@ -855,7 +891,7 @@ function executeCmd(idx) {
 }
 
 /* ════════════════════════════════════════════════
-   EMAIL TEMPLATES (FULL DATA RESTORED)
+   EMAIL TEMPLATES
 ════════════════════════════════════════════════ */
 const emailTemplates = [
   { id:"initial_followup", title:"Initial Follow Up", icon:"📧", content:`Dear Customer,\n\nThank you for contacting HP Care.\nBeing a valued customer, we assure you of our timely assistance in taking care of the issue with your HP PC.\n\nBased on our telephonic interaction today, please find the case details below.\n\nIssue Reported : [Enter Issue]\nCase Number : [Enter Case ID]\nSerial Number : [Enter Serial Number]\n\nOur Support Feedback Team will reach out to you soon with an update.\nIf any concern arises, please contact our technical support toll-free line anytime.\n\nRegards,\n\nACS - INDIA\nHP Toll-Free no: 1800 2587 170\nHP appreciates your business.` },
@@ -1140,7 +1176,7 @@ dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-ove
 dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); const f = e.dataTransfer.files[0]; if(f) validateAndProcessFile(f); });
 
 /* ════════════════════════════════════════════════
-   GOLDEN ACCOUNT LEDGER (FULL DATA RESTORED)
+   GOLDEN ACCOUNT LEDGER
 ════════════════════════════════════════════════ */
 const goldenAccountsRawData = [
   {"Zone CS":"South","Account Name":"ACCENTURE INDIA PRIVATE LIMITED - IN","ADM/ VRM Name":"M, Jagannathan","FY26 GTM":"India Inc/PSU"},
